@@ -1,9 +1,10 @@
-﻿using WordRepeat.Core.Models;
+﻿using WordRepeat.Application.Abstractions;
+using WordRepeat.Core.Models;
 using WordRepeat.DataAccess.Sqlite.Abstractions;
 
 namespace WordRepeat.Application.Services
 {
-    public class WordPairService
+    public class WordPairService : IWordPairService
     {
         private readonly IWordsPairRepository _repository;
         public WordPairService(IWordsPairRepository repository)
