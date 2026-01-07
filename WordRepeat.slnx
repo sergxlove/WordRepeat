@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="WordRepeat.Application/WordRepeat.Application.csproj" />
+  <Project Path="WordRepeat.Core/WordRepeat.Core.csproj" />
+  <Project Path="WordRepeat.DataAccess.Sqlite/WordRepeat.DataAccess.Sqlite.csproj" />
+  <Project Path="WordRepeat/WordRepeat.csproj" />
+</Solution>
