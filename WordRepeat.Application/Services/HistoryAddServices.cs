@@ -1,14 +1,15 @@
-﻿using WordRepeat.Core.Models;
+﻿using WordRepeat.Application.Abstractions;
+using WordRepeat.Core.Models;
 using WordRepeat.DataAccess.Sqlite.Abstractions;
 
 namespace WordRepeat.Application.Services
 {
-    public class HistoryAddServices
+    public class HistoryAddServices : IHistoryAddServices
     {
         private readonly IHistoryAddRepository _repository;
         public HistoryAddServices(IHistoryAddRepository repository)
         {
-            _repository = repository;   
+            _repository = repository;
         }
         public async Task<Guid> AddAsync(HistoryAdd historyAdd, CancellationToken token)
         {

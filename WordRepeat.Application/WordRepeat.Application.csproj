@@ -11,8 +11,4 @@
     <ProjectReference Include="..\WordRepeat.DataAccess.Sqlite\WordRepeat.DataAccess.Sqlite.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Abstractions\" />
-  </ItemGroup>
-
 </Project>

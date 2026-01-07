@@ -1,9 +1,10 @@
-﻿using WordRepeat.Core.Models;
+﻿using WordRepeat.Application.Abstractions;
+using WordRepeat.Core.Models;
 using WordRepeat.DataAccess.Sqlite.Abstractions;
 
 namespace WordRepeat.Application.Services
 {
-    public class HistoryTrainService
+    public class HistoryTrainService : IHistoryTrainService
     {
         private readonly IHistoryTrainRepository _repository;
         public HistoryTrainService(IHistoryTrainRepository repository)
