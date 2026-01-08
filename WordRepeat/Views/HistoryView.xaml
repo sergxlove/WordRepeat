@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="WordRepeat.Views.HistoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WordRepeat.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="528" d:DesignWidth="703">
+    <Grid Background="Transparent"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+
+        <!-- Добавьте ваш контент сюда -->
+        <TextBlock Text="Главная страница" 
+                   Foreground="White"
+                   FontSize="20"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top" Margin="73,44,0,0"/>
+        <TextBlock Text="Главная страница" 
+            Foreground="White"
+            FontSize="20"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top" Margin="512,455,0,0"/>
+
+    </Grid>
+</UserControl>
