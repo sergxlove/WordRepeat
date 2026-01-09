@@ -15,12 +15,17 @@ namespace WordRepeat.Views
 {
     /// <summary>
     /// Логика взаимодействия для TrainView.xaml
-    /// </summary>
+    /// </summary> 
     public partial class TrainView : UserControl
     {
         public TrainView()
         {
             InitializeComponent();
+        }
+        
+        private void StartTrainingButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

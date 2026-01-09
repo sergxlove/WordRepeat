@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query.Internal;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -21,6 +22,46 @@ namespace WordRepeat.Views
         public WordsView()
         {
             InitializeComponent();
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void FirstPageButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PrevPageButton_Click(object sender, RoutedEventArgs e) 
+        {
+
+        }
+
+        private void NextPageButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void LastPageButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            
         }
     }
 }
