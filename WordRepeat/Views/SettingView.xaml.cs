@@ -22,5 +22,15 @@ namespace WordRepeat.Views
         {
             InitializeComponent();
         }
+
+        private void ImportWordsButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ExportWordsButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

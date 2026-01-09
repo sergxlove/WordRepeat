@@ -5,8 +5,593 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WordRepeat.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="528" d:DesignWidth="703">
-    <Grid>
-            
+             d:DesignHeight="528" d:DesignWidth="703"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+    <UserControl.Resources>
+        <!-- Стиль для карточек статистики -->
+        <Style x:Key="StatCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF1A1A1A"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderBrush" Value="#FF333333"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,10,10"/>
+        </Style>
+
+        <!-- Стиль для заголовков карточек -->
+        <Style x:Key="CardTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+        </Style>
+
+        <!-- Стиль для больших чисел в статистике -->
+        <Style x:Key="LargeNumberStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+
+        <!-- Стиль для меток статистики -->
+        <Style x:Key="StatLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Мотивирующая фраза -->
+            <RowDefinition Height="*"/>
+            <!-- Основной контент -->
+        </Grid.RowDefinitions>
+
+        <!-- МОТИВИРУЮЩАЯ ФРАЗА -->
+        <Border Grid.Row="0" 
+                Margin="10,10,10,20" 
+                Background="#FF2196F3"
+                CornerRadius="8"
+                BorderThickness="0">
+            <StackPanel Margin="25,20" Orientation="Horizontal">
+                <TextBlock Text="💪" 
+                           FontSize="28" 
+                           VerticalAlignment="Center"
+                           Margin="0,0,15,0"/>
+                <StackPanel>
+                    <TextBlock Text="Каждый день — шаг к совершенству!" 
+                               Foreground="White" 
+                               FontSize="18" 
+                               FontWeight="Bold"/>
+                    <TextBlock Text="Продолжайте в том же духе, вы отлично справляетесь!" 
+                               Foreground="#E0FFFFFF" 
+                               FontSize="14"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- ОСНОВНОЙ КОНТЕНТ -->
+        <ScrollViewer Grid.Row="1" 
+                      Margin="10,0,10,10" 
+                      VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Краткая статистика -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Статистика по дням недели -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Детальная статистика -->
+                </Grid.RowDefinitions>
+
+                <!-- КРАТКАЯ СТАТИСТИКА -->
+                <StackPanel Grid.Row="0" 
+                            Orientation="Horizontal" 
+                            Margin="0,0,0,20">
+
+                    <!-- Всего слов -->
+                    <Border Style="{StaticResource StatCardStyle}" Width="200">
+                        <StackPanel>
+                            <TextBlock Text="Всего слов" Style="{StaticResource CardTitleStyle}"/>
+                            <TextBlock x:Name="TotalWordsText" 
+                                       Text="0" 
+                                       Style="{StaticResource LargeNumberStyle}"/>
+                            <TextBlock Text="в вашей базе" Style="{StaticResource StatLabelStyle}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Сегодня изучено -->
+                    <Border Style="{StaticResource StatCardStyle}" Width="200">
+                        <StackPanel>
+                            <TextBlock Text="Изучено сегодня" Style="{StaticResource CardTitleStyle}"/>
+                            <TextBlock x:Name="TodayLearnedText" 
+                                       Text="0" 
+                                       Style="{StaticResource LargeNumberStyle}"/>
+                            <TextBlock Text="новых слов" Style="{StaticResource StatLabelStyle}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Повторено сегодня -->
+                    <Border Style="{StaticResource StatCardStyle}" Width="200">
+                        <StackPanel>
+                            <TextBlock Text="Повторено сегодня" Style="{StaticResource CardTitleStyle}"/>
+                            <TextBlock x:Name="TodayRepeatedText" 
+                                       Text="0" 
+                                       Style="{StaticResource LargeNumberStyle}"/>
+                            <TextBlock Text="слов закреплено" Style="{StaticResource StatLabelStyle}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Точность -->
+                    <Border Style="{StaticResource StatCardStyle}" Width="200">
+                        <StackPanel>
+                            <TextBlock Text="Точность ответов" Style="{StaticResource CardTitleStyle}"/>
+                            <TextBlock x:Name="AccuracyText" 
+                                       Text="0%" 
+                                       Style="{StaticResource LargeNumberStyle}"/>
+                            <TextBlock Text="за последнюю неделю" Style="{StaticResource StatLabelStyle}"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+
+                <!-- СТАТИСТИКА ПО ДНЯМ НЕДЕЛИ -->
+                <Border Grid.Row="1" 
+                        Style="{StaticResource StatCardStyle}"
+                        Margin="0,0,0,20">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Заголовок -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <TextBlock Text="📅" 
+                                       FontSize="20" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            <TextBlock Text="Активность по дням недели" 
+                                       Foreground="White" 
+                                       FontSize="16" 
+                                       FontWeight="Bold"/>
+                        </StackPanel>
+
+                        <!-- Таблица статистики -->
+                        <Border Grid.Row="1" 
+                                Background="#FF222222" 
+                                CornerRadius="8"
+                                Padding="20"
+                                Margin="0,20,0,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="Подробная статистика" 
+                                           Foreground="#FFAAAAAA" 
+                                           FontSize="14"
+                                           Margin="0,0,0,15"/>
+
+                                <!-- Таблица -->
+                                <DataGrid x:Name="DailyStatsDataGrid"
+                                          Grid.Row="1"
+                                          AutoGenerateColumns="False"
+                                          CanUserAddRows="False"
+                                          CanUserDeleteRows="False"
+                                          IsReadOnly="True"
+                                          Background="Transparent"
+                                          Foreground="White"
+                                          BorderThickness="0"
+                                          HeadersVisibility="Column"
+                                          RowHeight="40"
+                                          GridLinesVisibility="None"
+                                          HorizontalScrollBarVisibility="Disabled">
+
+                                    <DataGrid.Columns>
+                                        <!-- День недели -->
+                                        <DataGridTextColumn Header="День" 
+                                                            Width="*" 
+                                                            Binding="{Binding Day}">
+                                            <DataGridTextColumn.HeaderStyle>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="#FF2A2A2A"/>
+                                                    <Setter Property="Foreground" Value="#FFAAAAAA"/>
+                                                    <Setter Property="BorderBrush" Value="#FF444444"/>
+                                                    <Setter Property="Height" Value="35"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                                    <Setter Property="Padding" Value="10,0"/>
+                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                </Style>
+                                            </DataGridTextColumn.HeaderStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="Margin" Value="10,0"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <!-- Добавленные слова -->
+                                        <DataGridTextColumn Header="Добавлено" 
+                                                            Width="*" 
+                                                            Binding="{Binding AddedWords}">
+                                            <DataGridTextColumn.HeaderStyle>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="#FF2A2A2A"/>
+                                                    <Setter Property="Foreground" Value="#FFAAAAAA"/>
+                                                    <Setter Property="BorderBrush" Value="#FF444444"/>
+                                                    <Setter Property="Height" Value="35"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                </Style>
+                                            </DataGridTextColumn.HeaderStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="#FF2196F3"/>
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <!-- Повторенные слова -->
+                                        <DataGridTextColumn Header="Повторено" 
+                                                            Width="*" 
+                                                            Binding="{Binding RepeatedWords}">
+                                            <DataGridTextColumn.HeaderStyle>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="#FF2A2A2A"/>
+                                                    <Setter Property="Foreground" Value="#FFAAAAAA"/>
+                                                    <Setter Property="BorderBrush" Value="#FF444444"/>
+                                                    <Setter Property="Height" Value="35"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                </Style>
+                                            </DataGridTextColumn.HeaderStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="#FF4CAF50"/>
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <!-- Точность -->
+                                        <DataGridTextColumn Header="Точность" 
+                                                            Width="*" 
+                                                            Binding="{Binding Accuracy, StringFormat='{}{0}%'}">
+                                            <DataGridTextColumn.HeaderStyle>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="#FF2A2A2A"/>
+                                                    <Setter Property="Foreground" Value="#FFAAAAAA"/>
+                                                    <Setter Property="BorderBrush" Value="#FF444444"/>
+                                                    <Setter Property="Height" Value="35"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                </Style>
+                                            </DataGridTextColumn.HeaderStyle>
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="{Binding AccuracyColor}"/>
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+
+                                    <!-- Стиль строк -->
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="#FF333333"/>
+                                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#FF2D2D2D"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.RowStyle>
+
+                                    <!-- Убираем пустую колонку справа -->
+                                    <DataGrid.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                        </Style>
+                                    </DataGrid.CellStyle>
+                                </DataGrid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- ДЕТАЛЬНАЯ СТАТИСТИКА ТРЕНИРОВОК -->
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Статистика тренировок -->
+                    <Border Grid.Column="0" 
+                            Style="{StaticResource StatCardStyle}"
+                            Margin="0,0,5,0">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <TextBlock Text="📊" 
+                                           FontSize="20" 
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,10,0"/>
+                                <TextBlock Text="Статистика тренировок" 
+                                           Foreground="White" 
+                                           FontSize="16" 
+                                           FontWeight="Bold"/>
+                            </StackPanel>
+
+                            <!-- Круговые индикаторы -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Общая точность -->
+                                <StackPanel Grid.Column="0" 
+                                            HorizontalAlignment="Center">
+                                    <Border Width="100" 
+                                            Height="100" 
+                                            BorderThickness="5" 
+                                            BorderBrush="#FF2196F3"
+                                            CornerRadius="50"
+                                            HorizontalAlignment="Center">
+                                        <TextBlock x:Name="OverallAccuracyText"
+                                                   Text="0%" 
+                                                   Foreground="White" 
+                                                   FontSize="24" 
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="Общая точность" 
+                                               Style="{StaticResource StatLabelStyle}"
+                                               Margin="0,10,0,0"/>
+                                </StackPanel>
+
+                                <!-- Точность за неделю -->
+                                <StackPanel Grid.Column="1" 
+                                            HorizontalAlignment="Center">
+                                    <Border Width="100" 
+                                            Height="100" 
+                                            BorderThickness="5" 
+                                            BorderBrush="#FF4CAF50"
+                                            CornerRadius="50"
+                                            HorizontalAlignment="Center">
+                                        <TextBlock x:Name="WeeklyAccuracyText"
+                                                   Text="0%" 
+                                                   Foreground="White" 
+                                                   FontSize="24" 
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="За неделю" 
+                                               Style="{StaticResource StatLabelStyle}"
+                                               Margin="0,10,0,0"/>
+                                </StackPanel>
+
+                                <!-- Точность за месяц -->
+                                <StackPanel Grid.Column="2" 
+                                            HorizontalAlignment="Center">
+                                    <Border Width="100" 
+                                            Height="100" 
+                                            BorderThickness="5" 
+                                            BorderBrush="#FF9C27B0"
+                                            CornerRadius="50"
+                                            HorizontalAlignment="Center">
+                                        <TextBlock x:Name="MonthlyAccuracyText"
+                                                   Text="0%" 
+                                                   Foreground="White" 
+                                                   FontSize="24" 
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="За месяц" 
+                                               Style="{StaticResource StatLabelStyle}"
+                                               Margin="0,10,0,0"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Детализация -->
+                            <StackPanel Margin="0,30,0,0">
+                                <StackPanel Orientation="Horizontal" 
+                                            Margin="0,0,0,10">
+                                    <Border Width="12" 
+                                            Height="12" 
+                                            Background="#FF2196F3"
+                                            CornerRadius="2"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,10,0"/>
+                                    <TextBlock x:Name="CorrectAnswersText"
+                                               Text="Правильные ответы: 0" 
+                                               Foreground="#FFAAAAAA"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" 
+                                            Margin="0,0,0,10">
+                                    <Border Width="12" 
+                                            Height="12" 
+                                            Background="#FFD32F2F"
+                                            CornerRadius="2"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,10,0"/>
+                                    <TextBlock x:Name="WrongAnswersText"
+                                               Text="Неправильные ответы: 0" 
+                                               Foreground="#FFAAAAAA"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="12" 
+                                            Height="12" 
+                                            Background="#FF9C27B0"
+                                            CornerRadius="2"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,10,0"/>
+                                    <TextBlock x:Name="TotalSessionsText"
+                                               Text="Всего тренировок: 0" 
+                                               Foreground="#FFAAAAAA"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Достижения и рекомендации -->
+                    <Border Grid.Column="1" 
+                            Style="{StaticResource StatCardStyle}"
+                            Margin="5,0,0,0">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <TextBlock Text="🏆" 
+                                           FontSize="20" 
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,10,0"/>
+                                <TextBlock Text="Достижения и рекомендации" 
+                                           Foreground="White" 
+                                           FontSize="16" 
+                                           FontWeight="Bold"/>
+                            </StackPanel>
+
+                            <!-- Достижения -->
+                            <Border Background="#FF222222" 
+                                    CornerRadius="8"
+                                    Padding="15"
+                                    Margin="0,0,0,20">
+                                <StackPanel>
+                                    <TextBlock Text="Ваши достижения" 
+                                               Foreground="#FFAAAAAA" 
+                                               FontSize="14"
+                                               Margin="0,0,0,10"/>
+
+                                    <StackPanel Orientation="Horizontal" 
+                                                Margin="0,0,0,10">
+                                        <Border Width="40" 
+                                                Height="40" 
+                                                Background="#FFFF9800"
+                                                CornerRadius="20"
+                                                HorizontalAlignment="Center">
+                                            <TextBlock Text="🔥" 
+                                                       FontSize="20"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Margin="10,0,0,0">
+                                            <TextBlock x:Name="Achievement1Title"
+                                                       Text="Неделя активности" 
+                                                       Foreground="White" 
+                                                       FontWeight="SemiBold"/>
+                                            <TextBlock x:Name="Achievement1Description"
+                                                       Text="Занимались 0 дней подряд" 
+                                                       Foreground="#FFAAAAAA" 
+                                                       FontSize="12"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="40" 
+                                                Height="40" 
+                                                Background="#FF2196F3"
+                                                CornerRadius="20"
+                                                HorizontalAlignment="Center">
+                                            <TextBlock Text="⭐" 
+                                                       FontSize="20"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Margin="10,0,0,0">
+                                            <TextBlock x:Name="Achievement2Title"
+                                                       Text="Мастер повторений" 
+                                                       Foreground="White" 
+                                                       FontWeight="SemiBold"/>
+                                            <TextBlock x:Name="Achievement2Description"
+                                                       Text="Повторили 0 слов" 
+                                                       Foreground="#FFAAAAAA" 
+                                                       FontSize="12"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Рекомендации -->
+                            <Border Background="#FF222222" 
+                                    CornerRadius="8"
+                                    Padding="15">
+                                <StackPanel>
+                                    <TextBlock Text="Рекомендации" 
+                                               Foreground="#FFAAAAAA" 
+                                               FontSize="14"
+                                               Margin="0,0,0,10"/>
+
+                                    <StackPanel Orientation="Horizontal" 
+                                                Margin="0,0,0,10">
+                                        <Border Width="24" 
+                                                Height="24" 
+                                                Background="#FF4CAF50"
+                                                CornerRadius="12"
+                                                HorizontalAlignment="Center">
+                                            <TextBlock Text="✓" 
+                                                       Foreground="White"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <TextBlock x:Name="Recommendation1Text"
+                                                   Text="Начните первую тренировку" 
+                                                   Foreground="White" 
+                                                   Margin="10,0,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="24" 
+                                                Height="24" 
+                                                Background="#FFFF9800"
+                                                CornerRadius="12"
+                                                HorizontalAlignment="Center">
+                                            <TextBlock Text="!" 
+                                                       Foreground="White"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <TextBlock x:Name="Recommendation2Text"
+                                                   Text="Добавьте первые слова в базу" 
+                                                   Foreground="White" 
+                                                   Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>
