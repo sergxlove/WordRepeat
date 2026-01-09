@@ -5,8 +5,241 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WordRepeat.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="528" d:DesignWidth="703">
-    <Grid>
-            
+             d:DesignHeight="528" d:DesignWidth="703"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+    <UserControl.Resources>
+        <Style x:Key="SettingsCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF1A1A1A"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderBrush" Value="#FF333333"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="25"/>
+            <Setter Property="Margin" Value="10,0,10,20"/>
+        </Style>
+
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+        </Style>
+
+        <Style x:Key="SettingDescriptionStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,10,0,0"/>
+            <Setter Property="LineHeight" Value="20"/>
+        </Style>
+
+        <Style x:Key="ImportExportButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="20,0,20,0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="10">
+            <TextBlock Text="Настройки" 
+                       Foreground="White" 
+                       FontSize="24" 
+                       FontWeight="Bold"/>
+            <TextBlock Text="Управление данными и настройками приложения" 
+                       Foreground="#FFAAAAAA" 
+                       FontSize="13"
+                       Margin="0,5,0,0"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" 
+                      Margin="10,0,10,10" 
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <TextBlock Text="💾" 
+                                       FontSize="20" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            <TextBlock Text="Управление данными" 
+                                       Style="{StaticResource SectionTitleStyle}"/>
+                        </StackPanel>
+
+                        <Border Grid.Row="1" 
+                                Background="#FF222222" 
+                                CornerRadius="6"
+                                Padding="0"
+                                Margin="0,0,0,15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" 
+                                        Background="#FF4CAF50" 
+                                        CornerRadius="6,0,0,6"
+                                        Width="60">
+                                    <TextBlock Text="📥" 
+                                               FontSize="24"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+
+                                <StackPanel Grid.Column="1" 
+                                            Margin="20,15">
+                                    <Button x:Name="ImportWordsButton"
+                                            Content="Импорт слов"
+                                            Style="{StaticResource ImportExportButtonStyle}"
+                                            Background="#FF4CAF50"
+                                            Foreground="White"
+                                            Click="ImportWordsButton_Click">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Grid>
+                                                    <ContentPresenter HorizontalAlignment="Left"
+                                                                      VerticalAlignment="Center"
+                                                                      Margin="0,0,0,0"/>
+                                                    <TextBlock Text="→"
+                                                               HorizontalAlignment="Right"
+                                                               VerticalAlignment="Center"
+                                                               FontSize="18"
+                                                               Margin="0,0,10,0"/>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+
+                                    <TextBlock Text="Загрузите слова из файла в формате CSV или TXT. Поддерживается импорт из других приложений для изучения языков."
+                                               Style="{StaticResource SettingDescriptionStyle}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Row="2" 
+                                Background="#FF222222" 
+                                CornerRadius="6"
+                                Padding="0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" 
+                                        Background="#FF2196F3" 
+                                        CornerRadius="6,0,0,6"
+                                        Width="60">
+                                    <TextBlock Text="📤" 
+                                               FontSize="24"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+
+                                <StackPanel Grid.Column="1" 
+                                            Margin="20,15">
+                                    <Button x:Name="ExportWordsButton"
+                                            Content="Экспорт слов"
+                                            Style="{StaticResource ImportExportButtonStyle}"
+                                            Background="#FF2196F3"
+                                            Foreground="White"
+                                            Click="ExportWordsButton_Click">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Grid>
+                                                    <ContentPresenter HorizontalAlignment="Left"
+                                                                      VerticalAlignment="Center"
+                                                                      Margin="0,0,0,0"/>
+                                                    <TextBlock Text="→"
+                                                               HorizontalAlignment="Right"
+                                                               VerticalAlignment="Center"
+                                                               FontSize="18"
+                                                               Margin="0,0,10,0"/>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+
+                                    <TextBlock Text="Сохраните все ваши слова в файл для резервного копирования или использования в других приложениях. Доступны форматы CSV и JSON."
+                                               Style="{StaticResource SettingDescriptionStyle}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+                            <TextBlock Text="ℹ️" 
+                                       FontSize="20" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            <TextBlock Text="Информация о приложении" 
+                                       Style="{StaticResource SectionTitleStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
+                            <TextBlock Text="Версия:" 
+                                       Foreground="#FFAAAAAA" 
+                                       FontSize="14"
+                                       Width="120"/>
+                            <TextBlock x:Name="AppVersionText"
+                                       Text="1.0.0" 
+                                       Foreground="White" 
+                                       FontSize="14"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,15">
+                            <TextBlock Text="Слов в базе:" 
+                                       Foreground="#FFAAAAAA" 
+                                       FontSize="14"
+                                       Width="120"/>
+                            <TextBlock x:Name="WordsCountText"
+                                       Text="0" 
+                                       Foreground="White" 
+                                       FontSize="14"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+                            <TextBlock Text="Размер данных:" 
+                                       Foreground="#FFAAAAAA" 
+                                       FontSize="14"
+                                       Width="120"/>
+                            <TextBlock x:Name="DataSizeText"
+                                       Text="0 МБ" 
+                                       Foreground="White" 
+                                       FontSize="14"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

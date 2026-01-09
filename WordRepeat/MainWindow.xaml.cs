@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -8,6 +10,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WordRepeat.Application.Abstractions;
+using WordRepeat.Application.Services;
+using WordRepeat.DataAccess.Sqlite;
+using WordRepeat.DataAccess.Sqlite.Abstractions;
+using WordRepeat.DataAccess.Sqlite.Repositories;
 using WordRepeat.Views;
 
 namespace WordRepeat
@@ -22,16 +29,31 @@ namespace WordRepeat
         private TrainView _trainView;
         private HistoryView _historyView;
         private SettingView _settingView;
-        private VariableView _currentView = VariableView.None;
+        private VariableView _currentView = VariableView.Main;
+        private ServiceCollection _serviceCollection;
+        private ServiceProvider _serviceProvider;
 
         public MainWindow()
         {
             InitializeComponent();
+            _serviceCollection = new ServiceCollection();
+            _serviceCollection.AddDbContext<WordRepeatDbContext>(opt => 
+                opt.UseSqlite("Data Source=D:\\projects\\projects\\WordRepeat\\WordRepeat\\data.db"));
+            _serviceCollection.AddScoped<IHistoryAddRepository, HistoryAddRepository>();
+            _serviceCollection.AddScoped<IHistoryTrainRepository, HistoryTrainRepository>();
+            _serviceCollection.AddScoped<IHistoryTypesRepository, HistoryTypesRepository>();
+            _serviceCollection.AddScoped<IWordsPairRepository, WordsPairRepository>();
+            _serviceCollection.AddScoped<IHistoryAddServices, HistoryAddServices>();
+            _serviceCollection.AddScoped<IHistoryTrainService, HistoryTrainService>();
+            _serviceCollection.AddScoped<IHistoryTypesService,  HistoryTypesService>();
+            _serviceCollection.AddScoped<IWordPairService, WordPairService>();
+            _serviceProvider = _serviceCollection.BuildServiceProvider();
             _mainView = new MainView();
             _wordsView = new WordsView();
             _trainView = new TrainView();
             _historyView = new HistoryView();
             _settingView = new SettingView();
+            ShowViews();
             SizeChanged += MainWindow_SizeChanged;
         }
 
