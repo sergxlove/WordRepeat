@@ -5,22 +5,433 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WordRepeat.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="528" d:DesignWidth="703">
-    <Grid Background="Transparent"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch">
+             d:DesignHeight="528" d:DesignWidth="703"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
 
-        <!-- Добавьте ваш контент сюда -->
-        <TextBlock Text="Главная страница" 
-                   Foreground="White"
-                   FontSize="20"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top" Margin="73,44,0,0"/>
-        <TextBlock Text="Главная страница" 
-            Foreground="White"
-            FontSize="20"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top" Margin="512,455,0,0"/>
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="#FF1A1A1A" />
+        <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="#FF444444" />
+        <SolidColorBrush x:Key="ComboBoxArrowBrush" Color="White" />
+        <SolidColorBrush x:Key="ComboBoxDropDownBackgroundBrush" Color="#FF1A1A1A" />
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Border" 
+                        Grid.ColumnSpan="2" 
+                        CornerRadius="2"
+                        Background="{StaticResource ComboBoxBackgroundBrush}"
+                        BorderBrush="{StaticResource ComboBoxBorderBrush}"
+                        BorderThickness="1" />
+                <Border Grid.Column="0"
+                        CornerRadius="2,0,0,2" 
+                        Margin="1" 
+                        Background="{StaticResource ComboBoxBackgroundBrush}" 
+                        BorderThickness="0,0,1,0" />
+                <Path x:Name="Arrow"
+                      Grid.Column="1"     
+                      Fill="{StaticResource ComboBoxArrowBrush}"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Data="M 0 0 L 4 4 L 8 0 Z"/>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
+            <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+        </ControlTemplate>
+        <Style x:Key="DarkComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="#FF1A1A1A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF444444"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton" 
+                                          Template="{StaticResource ComboBoxToggleButton}" 
+                                          Grid.Column="2" 
+                                          Focusable="false"
+                                          IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press">
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite"
+                                              IsHitTestVisible="False" 
+                                              Margin="10,0,30,0"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left" />
+                            <TextBox x:Name="PART_EditableTextBox"
+                                     Style="{x:Null}" 
+                                     Template="{StaticResource ComboBoxTextBox}" 
+                                     HorizontalAlignment="Left" 
+                                     VerticalAlignment="Center" 
+                                     Margin="10,0,30,0"
+                                     Focusable="True" 
+                                     Background="Transparent"
+                                     Foreground="White"
+                                     Visibility="Hidden"
+                                     IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                            <Popup Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True" 
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                                      SnapsToDevicePixels="True"                
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder"
+                                            Background="{StaticResource ComboBoxDropDownBackgroundBrush}"
+                                            BorderBrush="{StaticResource ComboBoxBorderBrush}"
+                                            BorderThickness="1"/>
+                                    <ScrollViewer Margin="4" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="#FF1A1A1A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF2A2A2A"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#FF2A2A2A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
 
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Margin="10">
+            <TextBlock Text="История тренировок" 
+                       Foreground="White" 
+                       FontSize="24" 
+                       FontWeight="Bold"/>
+            <TextBlock Text="Просматривайте историю ваших тренировок и отслеживайте прогресс" 
+                       Foreground="#FFAAAAAA" 
+                       FontSize="13"
+                       Margin="0,5,0,0"/>
+        </StackPanel>
+        <Border Grid.Row="1" 
+                Margin="10,10,10,10" 
+                Background="#FF1A1A1A" 
+                CornerRadius="8"
+                BorderBrush="#FF333333"
+                BorderThickness="1">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" 
+                        Background="#FF222222" 
+                        CornerRadius="8,8,0,0"
+                        BorderBrush="#FF333333"
+                        BorderThickness="0,0,0,1">
+
+                    <Grid Margin="15,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                            <TextBlock Text="📅" 
+                                       FontSize="16" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            <ComboBox Width="150" 
+                                      Height="30" 
+                                      Style="{StaticResource DarkComboBoxStyle}"
+                                      FontSize="13">
+                                <ComboBoxItem Content="Все даты" IsSelected="True"/>
+                                <ComboBoxItem Content="Сегодня"/>
+                                <ComboBoxItem Content="За неделю"/>
+                                <ComboBoxItem Content="За месяц"/>
+                            </ComboBox>
+
+                            <ComboBox Width="120" 
+                                      Height="30" 
+                                      Style="{StaticResource DarkComboBoxStyle}"
+                                      FontSize="13"
+                                      Margin="10,0,0,0">
+                                <ComboBoxItem Content="Все режимы"/>
+                                <ComboBoxItem Content="Слово → Перевод"/>
+                                <ComboBoxItem Content="Перевод → Слово"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Content="🗘 Обновить" 
+                                    Width="110" 
+                                    Height="30"
+                                    Background="#FF2196F3"
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    FontSize="13"
+                                    Margin="0,0,10,0"/>
+
+                            <Button Content="🗑️ Очистить" 
+                                    Width="110" 
+                                    Height="30"
+                                    Background="#FFD32F2F"
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    FontSize="13"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <DataGrid x:Name="HistoryDataGrid" 
+                          Grid.Row="1"
+                          Margin="0"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          SelectionMode="Single"
+                          Background="Transparent"
+                          Foreground="White"
+                          BorderThickness="0"
+                          RowBackground="#FF222222"
+                          AlternatingRowBackground="#FF1E1E1E"
+                          HeadersVisibility="Column"
+                          HorizontalGridLinesBrush="#FF333333"
+                          VerticalGridLinesBrush="#FF333333"
+                          GridLinesVisibility="Horizontal"
+                          RowHeight="55"
+                          SelectionUnit="FullRow"
+                          IsReadOnly="True">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" 
+                                            Binding="{Binding Id}"
+                                            Visibility="Collapsed"/>
+
+                        <DataGridTextColumn Header="Тренировка" 
+                                            Width="*" 
+                                            Binding="{Binding Title}">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#FF2A2A2A"/>
+                                    <Setter Property="Foreground" Value="#FFAAAAAA"/>
+                                    <Setter Property="BorderBrush" Value="#FF444444"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="Height" Value="45"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                    <Setter Property="Padding" Value="15,0"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="FontSize" Value="14"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="15,0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Дата и время" 
+                                            Width="200" 
+                                            Binding="{Binding Date, StringFormat='dd.MM.yyyy HH:mm'}">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#FF2A2A2A"/>
+                                    <Setter Property="Foreground" Value="#FFAAAAAA"/>
+                                    <Setter Property="BorderBrush" Value="#FF444444"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="Height" Value="45"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                    <Setter Property="Padding" Value="15,0"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#FFAAAAAA"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="15,0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTemplateColumn Header="Результат" 
+                                                Width="200">
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#FF2A2A2A"/>
+                                    <Setter Property="Foreground" Value="#FFAAAAAA"/>
+                                    <Setter Property="BorderBrush" Value="#FF444444"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="Height" Value="45"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Background="{Binding ResultColor}"
+                                            CornerRadius="5"
+                                            Padding="10,5"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding ResultText}" 
+                                                   Foreground="White"
+                                                   FontWeight="Bold"
+                                                   FontSize="13"
+                                                   HorizontalAlignment="Center"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="BorderBrush" Value="#FF333333"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF2D2D2D"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#FF3A3A3A"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" 
+                Margin="10,0,10,10" 
+                Background="#FF1E1E1E" 
+                CornerRadius="8"
+                BorderBrush="#FF444444"
+                BorderThickness="1">
+
+            <Grid Margin="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="1" 
+                            Orientation="Horizontal" 
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right">
+
+                    <Button Content="❮❮" 
+                            Width="40" Height="40"
+                            Background="#FF2A2A2A"
+                            Foreground="White"
+                            BorderBrush="#FF555555"
+                            BorderThickness="1"
+                            ToolTip="Первая страница"/>
+
+                    <Button Content="❮" 
+                            Width="40" Height="40"
+                            Background="#FF2A2A2A"
+                            Foreground="White"
+                            BorderBrush="#FF555555"
+                            BorderThickness="0,1,0,1"
+                            ToolTip="Предыдущая страница"/>
+
+                    <Border Background="#FF2A2A2A"
+                            BorderBrush="#FF555555"
+                            BorderThickness="0,1,0,1"
+                            Height="40"
+                            Padding="15,0">
+                        <StackPanel Orientation="Horizontal" 
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="Страница" 
+                                       Foreground="#FFAAAAAA"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+
+                            <TextBox Width="40" 
+                                     Height="25"
+                                     Text="1"
+                                     Background="Transparent"
+                                     Foreground="White"
+                                     BorderThickness="0"
+                                     TextAlignment="Center"
+                                     VerticalContentAlignment="Center"
+                                     VerticalAlignment="Center"/>
+
+                            <TextBlock Text="из" 
+                                       Foreground="#FFAAAAAA"
+                                       VerticalAlignment="Center"
+                                       Margin="10,0,10,0"/>
+
+                            <TextBlock Text="1" 
+                                       Foreground="White"
+                                       FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Content="❯" 
+                            Width="40" Height="40"
+                            Background="#FF2A2A2A"
+                            Foreground="White"
+                            BorderBrush="#FF555555"
+                            BorderThickness="0,1,0,1"
+                            ToolTip="Следующая страница"/>
+
+                    <Button Content="❯❯" 
+                            Width="40" Height="40"
+                            Background="#FF2A2A2A"
+                            Foreground="White"
+                            BorderBrush="#FF555555"
+                            BorderThickness="1"
+                            ToolTip="Последняя страница"
+                            Margin="0,0,20,0"/>
+
+                    <TextBlock Text="Показывать:" 
+                               Foreground="#FFAAAAAA"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"/>
+
+                    <ComboBox Width="80" 
+                              Height="35"
+                              SelectedIndex="1"
+                              Style="{StaticResource DarkComboBoxStyle}">
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="25" IsSelected="True"/>
+                        <ComboBoxItem Content="50"/>
+                        <ComboBoxItem Content="100"/>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
