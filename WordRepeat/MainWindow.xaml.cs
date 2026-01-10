@@ -1,27 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using WordRepeat.Abstractions;
 using WordRepeat.Application.Abstractions;
 using WordRepeat.Application.Services;
 using WordRepeat.DataAccess.Sqlite;
 using WordRepeat.DataAccess.Sqlite.Abstractions;
 using WordRepeat.DataAccess.Sqlite.Repositories;
+using WordRepeat.Services;
 using WordRepeat.Views;
 
 namespace WordRepeat
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private MainView _mainView;
@@ -47,12 +38,14 @@ namespace WordRepeat
             _serviceCollection.AddScoped<IHistoryTrainService, HistoryTrainService>();
             _serviceCollection.AddScoped<IHistoryTypesService,  HistoryTypesService>();
             _serviceCollection.AddScoped<IWordPairService, WordPairService>();
+            _serviceCollection.AddScoped<INotificationService>(pr =>
+                new NotificationService(NotificationContainer));
             _serviceProvider = _serviceCollection.BuildServiceProvider();
-            _mainView = new MainView();
-            _wordsView = new WordsView();
-            _trainView = new TrainView();
-            _historyView = new HistoryView();
-            _settingView = new SettingView();
+            _mainView = new MainView(_serviceProvider);
+            _wordsView = new WordsView(_serviceProvider);
+            _trainView = new TrainView(_serviceProvider);
+            _historyView = new HistoryView(_serviceProvider);
+            _settingView = new SettingView(_serviceProvider);
             ShowViews();
             SizeChanged += MainWindow_SizeChanged;
         }
@@ -102,19 +95,19 @@ namespace WordRepeat
             switch (_currentView)
             {
                 case VariableView.Main:
-                    MainButton.Background = new SolidColorBrush(Color.FromRgb(10, 10, 15));
+                    MainButton.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
                     break;
                 case VariableView.Words:
-                    WordButton.Background = new SolidColorBrush(Color.FromRgb(10, 10, 15));
+                    WordButton.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
                     break;
                 case VariableView.Train:
-                    TrainButton.Background = new SolidColorBrush(Color.FromRgb(10, 10, 15));
+                    TrainButton.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
                     break;
                 case VariableView.History:
-                    HistoryButton.Background = new SolidColorBrush(Color.FromRgb(10, 10, 15));
+                    HistoryButton.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
                     break;
                 case VariableView.Setting:
-                    SettingButton.Background = new SolidColorBrush(Color.FromRgb(10, 10, 15));
+                    SettingButton.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
                     break;
                 default:
                     break;

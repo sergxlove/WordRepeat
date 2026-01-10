@@ -1,9 +1,11 @@
-﻿using WordRepeat.Core.Infrastructures;
+﻿using System.ComponentModel;
+using WordRepeat.Core.Infrastructures;
 
 namespace WordRepeat.Core.Models
 {
     public class HistoryTypes
     {
+        [Browsable(false)]
         public Guid Id { get; set; } 
         public string NameType { get; set; } = string.Empty;
 

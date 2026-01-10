@@ -1,9 +1,11 @@
-﻿using WordRepeat.Core.Infrastructures;
+﻿using System.ComponentModel;
+using WordRepeat.Core.Infrastructures;
 
 namespace WordRepeat.Core.Models
 {
     public class WordsPair
     {
+        [Browsable(false)]
         public Guid Id { get; set; } 
         public string Word { get; set; } = string.Empty;
         public string Tranclate { get; set; } = string.Empty;

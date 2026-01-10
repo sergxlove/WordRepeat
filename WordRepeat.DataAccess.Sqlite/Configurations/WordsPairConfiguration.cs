@@ -8,7 +8,12 @@ namespace WordRepeat.DataAccess.Sqlite.Configurations
     {
         public void Configure(EntityTypeBuilder<WordsPairEntity> builder)
         {
-            throw new NotImplementedException();
+            builder.ToTable("words");
+            builder.HasKey(a => a.Id);
+            builder.Property(a => a.Word)
+                .IsRequired();
+            builder.Property(a => a.Tranclate)
+                .IsRequired();
         }
     }
 }
