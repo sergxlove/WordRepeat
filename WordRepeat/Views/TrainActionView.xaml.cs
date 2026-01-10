@@ -1,26 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WordRepeat.Views
 {
-    /// <summary>
-    /// Логика взаимодействия для TrainActionView.xaml
-    /// </summary>
     public partial class TrainActionView : UserControl
     {
-        public TrainActionView()
+        private ServiceProvider _serviceProvider;
+        public TrainActionView(ServiceProvider serviceProvider)
         {
             InitializeComponent();
+            _serviceProvider = serviceProvider;
         }
 
         private void CheckButton_Click(object sender, RoutedEventArgs e)

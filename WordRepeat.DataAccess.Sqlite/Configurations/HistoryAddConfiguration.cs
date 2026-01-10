@@ -8,7 +8,14 @@ namespace WordRepeat.DataAccess.Sqlite.Configurations
     {
         public void Configure(EntityTypeBuilder<HistoryAddEntity> builder)
         {
-            throw new NotImplementedException();
+            builder.ToTable("historyadd");
+            builder.HasKey(a => a.Id);
+            builder.Property(a => a.Name)
+                .IsRequired();
+            builder.Property(a => a.Date)
+                .IsRequired();
+            builder.Property(a => a.CountAdd)
+                .IsRequired();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace WordRepeat.DataAccess.Sqlite
     {
         public WordRepeatDbContext(DbContextOptions<WordRepeatDbContext> options) : base(options)
         {
-
+            Database.EnsureCreated();
         }
         public DbSet<HistoryAddEntity> HistoryAddTable { get; set; }
         public DbSet<HistoryTrainEntity> HistoryTrainTable { get; set; }
