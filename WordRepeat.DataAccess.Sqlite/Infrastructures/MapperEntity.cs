@@ -46,7 +46,7 @@ namespace WordRepeat.DataAccess.Sqlite.Infrastructures
             WordsPairEntity wordsPairEntity = new WordsPairEntity()
             {
                 Id = wordsPair.Id,
-                Tranclate = wordsPair.Tranclate,
+                Tranclate = wordsPair.Translate,
                 Word = wordsPair.Word
             };
             return wordsPairEntity;

@@ -8,7 +8,7 @@ namespace WordRepeat.Core.Models
         [Browsable(false)]
         public Guid Id { get; set; } 
         public string Word { get; set; } = string.Empty;
-        public string Tranclate { get; set; } = string.Empty;
+        public string Translate { get; set; } = string.Empty;
 
         public static ResultCreateModel<WordsPair> Create(string word, string tranclate)
         {
@@ -39,7 +39,7 @@ namespace WordRepeat.Core.Models
         {
             Id = id;
             Word = word;
-            Tranclate = tranclate;
+            Translate = tranclate;
         }
     }
 }

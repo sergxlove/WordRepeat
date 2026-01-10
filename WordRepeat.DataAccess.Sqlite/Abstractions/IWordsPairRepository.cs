@@ -9,5 +9,6 @@ namespace WordRepeat.DataAccess.Sqlite.Abstractions
         Task<int> DeleteAsync(string word, string translate, CancellationToken token);
         Task<int> UpdateTranslateAsync(string word, string oldTranslate, string newTranslate, CancellationToken token);
         Task<int> UpdateWordAsync(string oldWord, string newWord, string translate, CancellationToken token);
+        Task<List<WordsPair>> GetByPaginationAsync(int currentPage, int sizePage, CancellationToken token);
     }
 }
