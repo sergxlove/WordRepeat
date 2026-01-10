@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WordRepeat.Abstractions;
@@ -16,19 +15,29 @@ namespace WordRepeat.Views
         private ObservableCollection<WordsPair> _wordsPairAll;
         private int _totalWords;
         private int _currentPage = 1;
-        private int _sizePage;
+        private int _sizePage = 50;
         public WordsView(ServiceProvider serviceProvider)
         {
             InitializeComponent();
             _serviceProvider = serviceProvider;
             _wordsPairAll = new ObservableCollection<WordsPair>();
+            WordsDataGrid.ItemsSource = _wordsPairAll;
+            _totalWords = Convert.ToInt32(PageSizeComboBox.Text);
+            LoadData();
         }
 
-        private async void LoadData(int currentPage,  int sizePage)
+        private async void LoadData()
         {
+            _wordsPairAll.Clear();
             using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             CancellationToken token = cts.Token;
             IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+            List<WordsPair> result = await wordService
+                .GetByPaginationAsync(_currentPage, _sizePage, token);
+            foreach (WordsPair w in result)
+            {
+                _wordsPairAll.Add(w);
+            }
         }
 
         private async void AddButton_Click(object sender, RoutedEventArgs e)
@@ -65,14 +74,33 @@ namespace WordRepeat.Views
             TranslationTextBox.Text = "";
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
+        private void UpdateData_Click(object sender, RoutedEventArgs e)
         {
-
+            LoadData();
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private void EditButton_Click(object sender, RoutedEventArgs e)
         {
+            
+        }
 
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                if (button.DataContext is WordsPair wordPair)
+                {
+                    using CancellationTokenSource cts = new(TimeSpan.FromSeconds(30));
+                    CancellationToken token = cts.Token;
+                    IWordPairService wordService = _serviceProvider
+                        .GetRequiredService<IWordPairService>();
+                    await wordService.DeleteAsync(wordPair.Word, wordPair.Translate, token);
+                    INotificationService notification = _serviceProvider
+                        .GetRequiredService<INotificationService>();
+                    notification.ShowSuccess("Пара удалена");
+                    LoadData();
+                }
+            }
         }
 
         private void FirstPageButton_Click(object sender, RoutedEventArgs e)

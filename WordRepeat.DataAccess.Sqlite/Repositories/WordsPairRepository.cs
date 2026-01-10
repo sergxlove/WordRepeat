@@ -58,5 +58,21 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
                 .ExecuteUpdateAsync(a => a
                 .SetProperty(a => a.Tranclate, newTranslate), token);
         }
+
+        public async Task<List<WordsPair>> GetByPaginationAsync(int currentPage, int sizePage, 
+            CancellationToken token)
+        {
+            List<WordsPairEntity> entities = await _context.WordPairsTable
+                .AsNoTracking()
+                .Skip((currentPage - 1) * sizePage)
+                .Take(sizePage)
+                .ToListAsync(token);
+            List<WordsPair> result = new List<WordsPair>();
+            foreach (var e in entities)
+            {
+                result.Add(MapperEntity.FromWordsPairEntity(e));
+            }
+            return result;
+        }
     }
 }

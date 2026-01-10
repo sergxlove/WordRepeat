@@ -34,5 +34,11 @@ namespace WordRepeat.Application.Services
         {
             return await _repository.UpdateWordAsync(oldWord, newWord, translate, token);
         }
+        
+        public async Task<List<WordsPair>> GetByPaginationAsync(int currentPage, int sizePage,
+            CancellationToken token)
+        {
+            return await _repository.GetByPaginationAsync(currentPage, sizePage, token);
+        }
     }
 }
