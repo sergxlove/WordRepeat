@@ -42,7 +42,10 @@
 
                 <StackPanel Grid.Row="0" Margin="0,0,0,15">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                        <TextBlock Text="⚙️" FontSize="18" Margin="0,0,8,0"/>
+                        <TextBlock Text="⚙️" 
+                                   Foreground="White" 
+                                   FontSize="18" 
+                                   Margin="0,0,8,0"/>
                         <TextBlock Text="Настройки тренировки" 
                                    Foreground="White" 
                                    FontSize="16"
@@ -58,34 +61,37 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
-
                         <Border Background="#FF2A2A2A" 
                                 CornerRadius="6" 
-                                Padding="12">
+                                Padding="12"
+                                Margin="0,0,0,15">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="🎯" FontSize="14" Margin="0,0,8,0"/>
+                                    <TextBlock Text="🎯" 
+                                               Foreground="White" 
+                                               FontSize="14" 
+                                               Margin="0,0,8,0"/>
                                     <TextBlock Text="Режим" 
                                                Foreground="White" 
                                                FontSize="14"
                                                FontWeight="Bold"/>
                                 </StackPanel>
 
-                                <StackPanel>
+                                <StackPanel Margin="5,0,0,0">
                                     <RadioButton x:Name="ModeWordRadio" 
                                                  GroupName="TrainingMode"
                                                  Content="Слово → Перевод"
                                                  IsChecked="True"
                                                  Foreground="White"
                                                  FontSize="13"
-                                                 Margin="0,0,0,5"/>
+                                                 Margin="0,0,0,8"/>
 
                                     <RadioButton x:Name="ModeTranslationRadio" 
                                                  GroupName="TrainingMode"
                                                  Content="Перевод → Слово"
                                                  Foreground="White"
                                                  FontSize="13"
-                                                 Margin="0,0,0,5"/>
+                                                 Margin="0,0,0,8"/>
 
                                     <RadioButton x:Name="ModeMixedRadio" 
                                                  GroupName="TrainingMode"
@@ -101,23 +107,27 @@
                                 Padding="12">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="🔢" FontSize="14" Margin="0,0,8,0"/>
+                                    <TextBlock Text="🔢"
+                                               FontSize="14" 
+                                               Foreground="White" 
+                                               Margin="0,0,8,0"/>
                                     <TextBlock Text="Количество слов" 
                                                Foreground="White" 
                                                FontSize="14"
                                                FontWeight="Bold"/>
                                 </StackPanel>
 
-                                <StackPanel>
+                                <StackPanel Margin="5,0,0,0">
                                     <Slider x:Name="WordsCountSlider" 
                                             Minimum="5" 
                                             Maximum="50" 
                                             Value="20"
                                             Height="25"
-                                            Margin="0,0,0,8"/>
-                                    
+                                            Margin="0,0,0,12"/>
+
                                     <StackPanel Orientation="Horizontal" 
-                                                HorizontalAlignment="Center">
+                                                HorizontalAlignment="Center"
+                                                Margin="0,5,0,0">
                                         <TextBlock x:Name="SelectedCountText" 
                                                    Text="20" 
                                                    Foreground="#FF4CAF50" 
@@ -133,28 +143,31 @@
                         </Border>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="2" >
-
+                    <StackPanel Grid.Column="2">
                         <Border Background="#FF2A2A2A" 
                                 CornerRadius="6" 
-                                Padding="12">
+                                Padding="12"
+                                Margin="0,0,0,15">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="❓" FontSize="14" Margin="0,0,8,0"/>
+                                    <TextBlock Text="❓" 
+                                               Foreground="White" 
+                                               FontSize="14"
+                                               Margin="0,0,8,0"/>
                                     <TextBlock Text="Тип вопросов" 
                                                Foreground="White" 
                                                FontSize="14"
                                                FontWeight="Bold"/>
                                 </StackPanel>
 
-                                <StackPanel>
+                                <StackPanel Margin="5,0,0,0">
                                     <RadioButton x:Name="TypeInputRadio" 
                                                  GroupName="QuestionType"
                                                  Content="Ввод ответа"
                                                  IsChecked="True"
                                                  Foreground="White"
                                                  FontSize="13"
-                                                 Margin="0,0,0,5"/>
+                                                 Margin="0,0,0,8"/>
 
                                     <RadioButton x:Name="TypeOptionsRadio" 
                                                  GroupName="QuestionType"
@@ -164,12 +177,12 @@
                                 </StackPanel>
 
                                 <StackPanel x:Name="OptionsSettingsPanel" 
-                                            Margin="5,8,0,0"
+                                            Margin="8,12,0,0"  
                                             Visibility="Collapsed">
                                     <TextBlock Text="Вариантов:" 
                                                Foreground="#FFAAAAAA" 
                                                FontSize="12"
-                                               Margin="0,0,0,3"/>
+                                               Margin="0,0,0,6"/>
                                     <ComboBox x:Name="OptionsCountComboBox"
                                               Height="28" 
                                               Background="#FF333333"
@@ -177,11 +190,8 @@
                                               BorderBrush="#FF555555"
                                               Padding="8,0"
                                               FontSize="12"
-                                              VerticalContentAlignment="Center">
-                                        <ComboBoxItem Content="3" IsSelected="True"/>
-                                        <ComboBoxItem Content="4"/>
-                                        <ComboBoxItem Content="5"/>
-                                    </ComboBox>
+                                              VerticalContentAlignment="Center"
+                                              Margin="0,0,0,5"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
@@ -191,27 +201,30 @@
                                 Padding="12">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="✨" FontSize="14" Margin="0,0,8,0"/>
+                                    <TextBlock Text="✨" 
+                                               FontSize="14" 
+                                               Foreground="White" 
+                                               Margin="0,0,8,0"/>
                                     <TextBlock Text="Дополнительно" 
                                                Foreground="White" 
                                                FontSize="14"
                                                FontWeight="Bold"/>
                                 </StackPanel>
 
-                                <StackPanel>
+                                <StackPanel Margin="5,0,0,0">
                                     <CheckBox x:Name="ShowTimerCheckBox"
                                               Content="Таймер"
                                               IsChecked="True"
                                               Foreground="White"
                                               FontSize="13"
-                                              Margin="0,0,0,5"/>
+                                              Margin="0,0,0,8"/>
 
                                     <CheckBox x:Name="ShowHintCheckBox"
                                               Content="Подсказки"
                                               IsChecked="True"
                                               Foreground="White"
                                               FontSize="13"
-                                              Margin="0,0,0,5"/>
+                                              Margin="0,0,0,8"/>
 
                                     <CheckBox x:Name="OnlyDifficultWordsCheckBox"
                                               Content="Только сложные"
@@ -303,7 +316,7 @@
                         </Border>
                     </StackPanel>
                 </StackPanel>
-                
+
                 <Button Grid.Column="1" 
                         Content="🚀 Начать"
                         Width="140"

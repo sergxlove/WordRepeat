@@ -8,6 +8,8 @@ using WordRepeat.Application.Services;
 using WordRepeat.DataAccess.Sqlite;
 using WordRepeat.DataAccess.Sqlite.Abstractions;
 using WordRepeat.DataAccess.Sqlite.Repositories;
+using WordRepeat.Enums;
+using WordRepeat.Models;
 using WordRepeat.Services;
 using WordRepeat.Views;
 
@@ -20,13 +22,21 @@ namespace WordRepeat
         private TrainView _trainView;
         private HistoryView _historyView;
         private SettingView _settingView;
+        private TrainActionView _trainActionView;
         private VariableView _currentView = VariableView.Main;
         private ServiceCollection _serviceCollection;
         private ServiceProvider _serviceProvider;
+        private AppData _appData;
+        public Action<VariableView> ChangeViewAction { get; private set; }
 
         public MainWindow()
         {
             InitializeComponent();
+            ChangeViewAction = (view) =>
+            {
+                _currentView = view;
+                ShowViews();
+            };
             _serviceCollection = new ServiceCollection();
             _serviceCollection.AddDbContext<WordRepeatDbContext>(opt => 
                 opt.UseSqlite("Data Source=D:\\projects\\projects\\WordRepeat\\WordRepeat\\data.db"));
@@ -41,11 +51,13 @@ namespace WordRepeat
             _serviceCollection.AddScoped<INotificationService>(pr =>
                 new NotificationService(NotificationContainer));
             _serviceProvider = _serviceCollection.BuildServiceProvider();
-            _mainView = new MainView(_serviceProvider);
-            _wordsView = new WordsView(_serviceProvider);
-            _trainView = new TrainView(_serviceProvider);
-            _historyView = new HistoryView(_serviceProvider);
-            _settingView = new SettingView(_serviceProvider);
+            _appData = new AppData(0, ChangeViewAction);
+            _mainView = new MainView(_serviceProvider, _appData);
+            _wordsView = new WordsView(_serviceProvider, _appData);
+            _trainView = new TrainView(_serviceProvider, _appData);
+            _historyView = new HistoryView(_serviceProvider, _appData);
+            _settingView = new SettingView(_serviceProvider, _appData);
+            _trainActionView = new TrainActionView(_serviceProvider, _appData);
             ShowViews();
             SizeChanged += MainWindow_SizeChanged;
         }
@@ -133,6 +145,9 @@ namespace WordRepeat
                 case VariableView.Setting:
                     MainContentControl.Content = _settingView;
                     break;
+                case VariableView.TrainAction:
+                    MainContentControl.Content = _trainActionView;
+                    break;
                 default:
                     break;
             }
@@ -145,16 +160,6 @@ namespace WordRepeat
                 content.Width = MainContentControl.ActualWidth;
                 content.Height = MainContentControl.ActualHeight;
             }
-        }
-
-        private enum VariableView
-        {
-            None = 0,
-            Main = 1,
-            Words = 2, 
-            Train = 3, 
-            History = 4,
-            Setting = 5
         }
     }
 

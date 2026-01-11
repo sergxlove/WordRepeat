@@ -12,7 +12,7 @@ namespace WordRepeat.DataAccess.Sqlite.Configurations
             builder.HasKey(a => a.Id);
             builder.Property(a => a.Word)
                 .IsRequired();
-            builder.Property(a => a.Tranclate)
+            builder.Property(a => a.Translate)
                 .IsRequired();
         }
     }

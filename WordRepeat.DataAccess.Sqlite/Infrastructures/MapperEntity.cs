@@ -46,7 +46,7 @@ namespace WordRepeat.DataAccess.Sqlite.Infrastructures
             WordsPairEntity wordsPairEntity = new WordsPairEntity()
             {
                 Id = wordsPair.Id,
-                Tranclate = wordsPair.Translate,
+                Translate = wordsPair.Translate,
                 Word = wordsPair.Word
             };
             return wordsPairEntity;
@@ -80,7 +80,7 @@ namespace WordRepeat.DataAccess.Sqlite.Infrastructures
 
         public static WordsPair FromWordsPairEntity(WordsPairEntity w)
         {
-            ResultCreateModel<WordsPair> wordPair = WordsPair.Create(w.Id, w.Word, w.Tranclate);
+            ResultCreateModel<WordsPair> wordPair = WordsPair.Create(w.Id, w.Word, w.Translate);
             if(!string.IsNullOrEmpty(wordPair.Error))
                 throw new Exception(wordPair.Error);
             return wordPair.Value;

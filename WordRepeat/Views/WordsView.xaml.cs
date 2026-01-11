@@ -6,6 +6,7 @@ using WordRepeat.Abstractions;
 using WordRepeat.Application.Abstractions;
 using WordRepeat.Core.Infrastructures;
 using WordRepeat.Core.Models;
+using WordRepeat.Models;
 
 namespace WordRepeat.Views
 {
@@ -16,13 +17,15 @@ namespace WordRepeat.Views
         private int _totalWords;
         private int _currentPage = 1;
         private int _sizePage = 50;
-        public WordsView(ServiceProvider serviceProvider)
+        private AppData _appData;
+        public WordsView(ServiceProvider serviceProvider, AppData appData)
         {
             InitializeComponent();
             _serviceProvider = serviceProvider;
             _wordsPairAll = new ObservableCollection<WordsPair>();
+            _appData = appData; 
             WordsDataGrid.ItemsSource = _wordsPairAll;
-            _totalWords = Convert.ToInt32(PageSizeComboBox.Text);
+            _sizePage = Convert.ToInt32(PageSizeComboBox.Text);
             LoadData();
         }
 
@@ -32,12 +35,16 @@ namespace WordRepeat.Views
             using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             CancellationToken token = cts.Token;
             IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+            _totalWords = await wordService.CountAsync(token);
             List<WordsPair> result = await wordService
                 .GetByPaginationAsync(_currentPage, _sizePage, token);
             foreach (WordsPair w in result)
             {
                 _wordsPairAll.Add(w);
             }
+            TotalWordsCount.Text = _totalWords.ToString();
+            TotalPagesText.Text = GetLastPage().ToString();
+            CountPagesText.Text = _currentPage.ToString();
         }
 
         private async void AddButton_Click(object sender, RoutedEventArgs e)
@@ -70,8 +77,10 @@ namespace WordRepeat.Views
             }
             Guid result = await wordService.AddAsync(wordPair.Value, token);
             notification.ShowSuccess("Пара успешно добавлена");
+            _totalWords++;
             WordTextBox.Text = "";
             TranslationTextBox.Text = "";
+            TotalWordsCount.Text = _totalWords.ToString();
         }
 
         private void UpdateData_Click(object sender, RoutedEventArgs e)
@@ -79,9 +88,41 @@ namespace WordRepeat.Views
             LoadData();
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
+        private async void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            CancellationToken token = cts.Token;
+            string textSearch = SearchTextBox.Text;
+            INotificationService notification = _serviceProvider
+                .GetRequiredService<INotificationService>();
+            IWordPairService wordService = _serviceProvider
+                .GetRequiredService<IWordPairService>();
+            if (string.IsNullOrEmpty(textSearch))
+            {
+                notification.ShowError("Строка поиска пуста");
+                return;
+            }
+            SearchTextBox.Text = "";
+            if (SearchByTranslateRadio.IsChecked == true)
+            {
+                List<WordsPair> result = await wordService.GetByTranslateAsync(textSearch, token);
+                _wordsPairAll.Clear();
+                foreach (WordsPair w in result)
+                {
+                    _wordsPairAll.Add(w);
+                }
+                return;
+            }
+            if(SearchByWordRadio.IsChecked == true)
+            {
+                List<WordsPair> result = await wordService.GetByWordAsync(textSearch, token);
+                _wordsPairAll.Clear();
+                foreach (WordsPair w in result)
+                {
+                    _wordsPairAll.Add(w);
+                }
+                return;
+            }
         }
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -99,33 +140,46 @@ namespace WordRepeat.Views
                         .GetRequiredService<INotificationService>();
                     notification.ShowSuccess("Пара удалена");
                     LoadData();
+                    _totalWords--;
+                    TotalWordsCount.Text = _totalWords.ToString();
                 }
             }
         }
 
         private void FirstPageButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _currentPage = 1;
+            LoadData();
         }
 
         private void PrevPageButton_Click(object sender, RoutedEventArgs e) 
         {
-
+            if(_currentPage != 1)
+            {
+                _currentPage -= 1;
+            }
+            LoadData();
         }
 
         private void NextPageButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if(_currentPage < GetLastPage())
+            {
+                _currentPage += 1;
+            }
+            LoadData();
         }
 
         private void LastPageButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _currentPage = GetLastPage();
+            LoadData();
         }
 
-        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private int GetLastPage()
         {
-            
+            if (_totalWords <= _sizePage) return 1;
+            return (int)Math.Ceiling((double)_totalWords / _sizePage);
         }
     }
 }

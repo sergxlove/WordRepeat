@@ -26,7 +26,7 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
         {
             WordsPairEntity? result = await _context.WordPairsTable
                 .AsNoTracking()
-                .FirstOrDefaultAsync(a => a.Word == word && a.Tranclate == translate, token);
+                .FirstOrDefaultAsync(a => a.Word == word && a.Translate == translate, token);
             if (result is null) return false;
             return true;
         }
@@ -35,7 +35,7 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
         {
             return await _context.WordPairsTable
                 .AsNoTracking()
-                .Where(a => a.Word == word && a.Tranclate == translate)
+                .Where(a => a.Word == word && a.Translate == translate)
                 .ExecuteDeleteAsync(token);
         }
 
@@ -44,7 +44,7 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
         {
             return await _context.WordPairsTable
                 .AsNoTracking()
-                .Where(a => a.Word == oldWord && a.Tranclate == translate)
+                .Where(a => a.Word == oldWord && a.Translate == translate)
                 .ExecuteUpdateAsync(a => a
                 .SetProperty(a => a.Word, newWord), token);
         }
@@ -54,9 +54,9 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
         {
             return await _context.WordPairsTable
                 .AsNoTracking()
-                .Where(a => a.Word == word && a.Tranclate == oldTranslate)
+                .Where(a => a.Word == word && a.Translate == oldTranslate)
                 .ExecuteUpdateAsync(a => a
-                .SetProperty(a => a.Tranclate, newTranslate), token);
+                .SetProperty(a => a.Translate, newTranslate), token);
         }
 
         public async Task<List<WordsPair>> GetByPaginationAsync(int currentPage, int sizePage, 
@@ -68,11 +68,46 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
                 .Take(sizePage)
                 .ToListAsync(token);
             List<WordsPair> result = new List<WordsPair>();
-            foreach (var e in entities)
+            foreach (WordsPairEntity e in entities)
             {
                 result.Add(MapperEntity.FromWordsPairEntity(e));
             }
             return result;
         }
+
+        public async Task<int> CountAsync(CancellationToken token)
+        {
+            return await _context.WordPairsTable
+                .CountAsync(token);
+        }
+
+        public async Task<List<WordsPair>> GetByWordAsync(string word, CancellationToken token)
+        {
+            List<WordsPairEntity> entities = await _context.WordPairsTable
+                .AsNoTracking()
+                .Where(a => a.Word.Contains(word.ToLower().Trim()))
+                .ToListAsync(token);
+            List<WordsPair> result = new List<WordsPair>();
+            foreach(WordsPairEntity e in entities)
+            {
+                result.Add(MapperEntity.FromWordsPairEntity(e));
+            }
+            return result;
+        }
+
+        public async Task<List<WordsPair>> GetByTranslateAsync(string translate, CancellationToken token)
+        {
+            List<WordsPairEntity> entities = await _context.WordPairsTable
+                .AsNoTracking()
+                .Where(a => a.Translate.Contains(translate.ToLower().Trim()))
+                .ToListAsync(token);
+            List<WordsPair> result = new List<WordsPair>();
+            foreach (WordsPairEntity e in entities)
+            {
+                result.Add(MapperEntity.FromWordsPairEntity(e));
+            }
+            return result;
+        }
+
     }
 }
