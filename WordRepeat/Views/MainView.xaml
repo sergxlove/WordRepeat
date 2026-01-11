@@ -56,6 +56,7 @@
             <StackPanel Margin="25,20" Orientation="Horizontal">
                 <TextBlock Text="💪" 
                            FontSize="28" 
+                           Foreground="White" 
                            VerticalAlignment="Center"
                            Margin="0,0,15,0"/>
                 <StackPanel>
@@ -140,6 +141,7 @@
                         <StackPanel Grid.Row="0" Orientation="Horizontal">
                             <TextBlock Text="📅" 
                                        FontSize="20" 
+                                       Foreground="White" 
                                        VerticalAlignment="Center"
                                        Margin="0,0,10,0"/>
                             <TextBlock Text="Активность по дням недели" 
@@ -310,6 +312,7 @@
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                 <TextBlock Text="📊" 
                                            FontSize="20" 
+                                           Foreground="White" 
                                            VerticalAlignment="Center"
                                            Margin="0,0,10,0"/>
                                 <TextBlock Text="Статистика тренировок" 
@@ -438,6 +441,7 @@
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                                 <TextBlock Text="🏆" 
                                            FontSize="20" 
+                                           Foreground="White" 
                                            VerticalAlignment="Center"
                                            Margin="0,0,10,0"/>
                                 <TextBlock Text="Достижения и рекомендации" 

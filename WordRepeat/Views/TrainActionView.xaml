@@ -33,6 +33,7 @@
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                     <TextBlock Text="📝" 
+                               Foreground="White" 
                                FontSize="16" 
                                VerticalAlignment="Center"
                                Margin="0,0,10,0"/>

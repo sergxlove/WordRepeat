@@ -148,6 +148,58 @@
             <Setter Property="Padding" Value="10,0"/>
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
+
+        <!-- Стиль для RadioButton -->
+        <Style x:Key="DarkRadioButtonStyle" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Кружок RadioButton -->
+                            <Ellipse x:Name="OuterEllipse"
+                                     Grid.Column="0"
+                                     Width="14" Height="14"
+                                     Stroke="#FF555555"
+                                     StrokeThickness="1"
+                                     Fill="#FF2A2A2A"
+                                     Margin="0,0,5,0"/>
+
+                            <!-- Внутренняя точка при выборе -->
+                            <Ellipse x:Name="InnerEllipse"
+                                     Grid.Column="0"
+                                     Width="8" Height="8"
+                                     Fill="#FF4CAF50"
+                                     Margin="0,0,5,0"
+                                     Visibility="Hidden"/>
+
+                            <!-- Текст -->
+                            <ContentPresenter Grid.Column="1"
+                                              Content="{TemplateBinding Content}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="InnerEllipse" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="OuterEllipse" Property="Stroke" Value="#FF4CAF50"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="OuterEllipse" Property="Stroke" Value="#FF888888"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid Background="Transparent">
@@ -269,6 +321,21 @@
                                FontSize="16"
                                FontWeight="Bold"/>
 
+                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                        <TextBlock Text="Искать:" 
+                                   Foreground="#FFAAAAAA"
+                                   VerticalAlignment="Center"/>
+                        <RadioButton x:Name="SearchByWordRadio" 
+                                     Content="по слову" 
+                                     GroupName="SearchType"
+                                     IsChecked="True"
+                                     Style="{StaticResource DarkRadioButtonStyle}"/>
+                        <RadioButton x:Name="SearchByTranslateRadio" 
+                                     Content="по переводу" 
+                                     GroupName="SearchType"
+                                     Style="{StaticResource DarkRadioButtonStyle}"/>
+                    </StackPanel>
+
                     <TextBox x:Name="SearchTextBox" 
                              Width="200"
                              Height="30"
@@ -278,7 +345,7 @@
                              Padding="10,0"
                              Margin="20,0,0,0"
                              FontSize="13"
-                             TextChanged="SearchTextBox_TextChanged">
+                             VerticalContentAlignment="Center">
                         <TextBox.Style>
                             <Style TargetType="TextBox">
                                 <Setter Property="Template">
@@ -316,6 +383,12 @@
                     </TextBox>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="🗘 Поиск" 
+                                Width="100" Height="30"
+                                Margin="20,0,0,0"
+                                Background="#FF4CAF50"
+                                Foreground="White"
+                                Click="SearchButton_Click"/>
                         <Button Content="🗘 Обновить" 
                                 Width="100" Height="30"
                                 Margin="20,0,0,0"
@@ -342,7 +415,6 @@
                           VerticalGridLinesBrush="#FF333333">
 
                     <DataGrid.Columns>
-
                         <DataGridTextColumn Header="Слово" 
                                             Width="*" 
                                             Binding="{Binding Word}"
@@ -375,14 +447,6 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Content="✏️" 
-                                                Width="30" Height="30"
-                                                Background="#FFFF9800"
-                                                Foreground="White"
-                                                ToolTip="Редактировать"
-                                                Click="EditButton_Click"
-                                                Margin="0,0,5,0"/>
-
                                         <Button Content="🗑️" 
                                                 Width="30" Height="30"
                                                 Background="#FFD32F2F"
@@ -441,15 +505,11 @@
                                VerticalAlignment="Center"
                                Margin="0,0,10,0"/>
 
-                    <TextBox x:Name="PageNumberTextBox" 
-                             Width="40" 
-                             Height="25"
-                             Text="1"
-                             Background="#FF2A2A2A"
-                             Foreground="White"
-                             BorderBrush="#FF555555"
-                             TextAlignment="Center"
-                             VerticalContentAlignment="Center"/>
+                    <TextBlock x:Name="CountPagesText" 
+                               Text="1" 
+                               Foreground="White"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"/>
 
                     <TextBlock Text="из" 
                                Foreground="#FFAAAAAA"

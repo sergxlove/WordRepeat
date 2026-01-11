@@ -163,6 +163,7 @@
                             <TextBlock Text="📅" 
                                        FontSize="16" 
                                        VerticalAlignment="Center"
+                                       Foreground="White" 
                                        Margin="0,0,10,0"/>
                             <ComboBox Width="150" 
                                       Height="30" 
