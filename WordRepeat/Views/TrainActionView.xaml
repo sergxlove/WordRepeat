@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch">
+             VerticalAlignment="Stretch"
+             Loaded="UserControl_Loaded">
 
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
@@ -162,6 +163,7 @@
         </Border>
 
         <Border Grid.Row="2" 
+                x:Name="OptionPanel"
                 Margin="10,0,10,10"
                 Background="#FF1E1E1E" 
                 CornerRadius="8"
