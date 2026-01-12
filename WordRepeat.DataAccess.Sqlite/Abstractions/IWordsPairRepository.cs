@@ -13,5 +13,6 @@ namespace WordRepeat.DataAccess.Sqlite.Abstractions
         Task<int> CountAsync(CancellationToken token);
         Task<List<WordsPair>> GetByWordAsync(string word, CancellationToken token);
         Task<List<WordsPair>> GetByTranslateAsync(string translate, CancellationToken token);
+        Task<WordsPair> GetByPositionAsync(int position, CancellationToken token);
     }
 }

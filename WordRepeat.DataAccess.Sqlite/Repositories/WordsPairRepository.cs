@@ -109,5 +109,13 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
             return result;
         }
 
+        public async Task<WordsPair> GetByPositionAsync(int position, CancellationToken token)
+        {
+            WordsPairEntity result = await _context.WordPairsTable
+                .AsNoTracking()
+                .OrderBy(a => a.Id)
+                .ElementAtAsync(position, token);
+            return MapperEntity.FromWordsPairEntity(result);
+        }
     }
 }

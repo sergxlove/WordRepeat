@@ -4,14 +4,17 @@ namespace WordRepeat.Models
 {
     public class AppData
     {
-        public int CountWords { get; set; }
         public Action<VariableView> ChangeViewAction { get; set; } 
+        public TrainData Train { get; set; }
+        public TrainResultData TrainResult { get; set; }
+        public StatsData Stats { get; set; }
 
-        public AppData(int countWords, Action<VariableView> changeViewAction)
+        public AppData(Action<VariableView> changeViewAction, TrainData train, TrainResultData trainResult, StatsData stats)
         {
-            CountWords = countWords;
             ChangeViewAction = changeViewAction;
+            Train = train;
+            TrainResult = trainResult;
+            Stats = stats;
         }
-
     }
 }

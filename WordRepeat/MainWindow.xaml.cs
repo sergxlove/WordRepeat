@@ -52,7 +52,7 @@ namespace WordRepeat
             _serviceCollection.AddScoped<INotificationService>(pr =>
                 new NotificationService(NotificationContainer));
             _serviceProvider = _serviceCollection.BuildServiceProvider();
-            _appData = new AppData(0, ChangeViewAction);
+            _appData = new AppData(ChangeViewAction, new(), new(), new());
             _mainView = new MainView(_serviceProvider, _appData);
             _wordsView = new WordsView(_serviceProvider, _appData);
             _trainView = new TrainView(_serviceProvider, _appData);
