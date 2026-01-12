@@ -123,7 +123,8 @@
                                             Maximum="50" 
                                             Value="20"
                                             Height="25"
-                                            Margin="0,0,0,12"/>
+                                            Margin="0,0,0,12"
+                                            ValueChanged="WordsCountSlider_ValueChanged"/>
 
                                     <StackPanel Orientation="Horizontal" 
                                                 HorizontalAlignment="Center"

@@ -424,40 +424,6 @@
                 <StackPanel Grid.Column="1" 
                             Orientation="Horizontal"
                             HorizontalAlignment="Center">
-                    <Button x:Name="SkipButton" 
-                            Content="Пропустить"
-                            Width="100"
-                            Height="35"
-                            Background="#FFFF9800"
-                            Foreground="White"
-                            FontWeight="Bold"
-                            FontSize="13"
-                            Margin="0,0,10,0"
-                            Click="SkipButton_Click">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                <Setter Property="Cursor" Value="Hand"/>
-                                <Setter Property="BorderThickness" Value="0"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}"
-                                                    CornerRadius="6">
-                                                <ContentPresenter HorizontalAlignment="Center" 
-                                                                  VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#FFE0A800"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-
                     <Button x:Name="CheckButton" 
                             Content="Проверить"
                             Width="100"
