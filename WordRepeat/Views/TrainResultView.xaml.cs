@@ -1,26 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using WordRepeat.Models;
 
 namespace WordRepeat.Views
-{
-    /// <summary>
-    /// Логика взаимодействия для TrainResultView.xaml
-    /// </summary>
+{   
     public partial class TrainResultView : UserControl
     {
-        public TrainResultView()
+        private ServiceProvider _serviceProvider;
+        private AppData _appData;
+        public TrainResultView(ServiceProvider serviceProvider, AppData appData)
         {
             InitializeComponent();
+            _serviceProvider = serviceProvider;
+            _appData = appData;
+        }
+
+        private void RestartButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

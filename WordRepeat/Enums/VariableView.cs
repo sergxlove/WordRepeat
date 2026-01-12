@@ -8,6 +8,7 @@
         Train = 3,
         History = 4,
         Setting = 5,
-        TrainAction = 6
+        TrainAction = 6,
+        TrainResult = 7
     }
 }

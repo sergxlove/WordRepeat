@@ -21,5 +21,10 @@ namespace WordRepeat.Views
         {
             _appData.ChangeViewAction(VariableView.TrainAction);
         }
+
+        private void WordsCountSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            SelectedCountText.Text = WordsCountSlider.Value.ToString();
+        }
     }
 }

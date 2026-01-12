@@ -23,6 +23,7 @@ namespace WordRepeat
         private HistoryView _historyView;
         private SettingView _settingView;
         private TrainActionView _trainActionView;
+        private TrainResultView _trainResultView;
         private VariableView _currentView = VariableView.Main;
         private ServiceCollection _serviceCollection;
         private ServiceProvider _serviceProvider;
@@ -58,6 +59,7 @@ namespace WordRepeat
             _historyView = new HistoryView(_serviceProvider, _appData);
             _settingView = new SettingView(_serviceProvider, _appData);
             _trainActionView = new TrainActionView(_serviceProvider, _appData);
+            _trainResultView = new TrainResultView(_serviceProvider, _appData);
             ShowViews();
             SizeChanged += MainWindow_SizeChanged;
         }
@@ -147,6 +149,9 @@ namespace WordRepeat
                     break;
                 case VariableView.TrainAction:
                     MainContentControl.Content = _trainActionView;
+                    break;
+                case VariableView.TrainResult:
+                    MainContentControl.Content = _trainResultView;
                     break;
                 default:
                     break;
