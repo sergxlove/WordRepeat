@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WordRepeat.Application.Abstractions;
@@ -20,28 +22,54 @@ namespace WordRepeat.Views
             _appData = appData;
         }
 
-        private async void ImportWordsButton_Click(object sender, RoutedEventArgs e)
+        private async void ImportCard_MouseLeftButtonDown(object sender, RoutedEventArgs e)
+        {
+            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            CancellationToken token = cts.Token;
+            var openFileDialog = new OpenFileDialog
+            {
+                Title = "Выберите файл",
+                Filter = "Текстовые файлы (*.txt)|*.txt",
+                Multiselect = false,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+
+                string filePath = openFileDialog.FileName;
+                string[] lines = await File.ReadAllLinesAsync(filePath);
+                string[] pair;
+                IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+                ResultCreateModel<WordsPair> wordPair;
+                foreach (string line in lines)
+                {
+                    pair = line.Split(' ');
+                    if (string.IsNullOrEmpty(pair[0]) || string.IsNullOrEmpty(pair[1])) continue;
+                    wordPair = WordsPair.Create(pair[0], pair[1]);
+                    if (!string.IsNullOrEmpty(wordPair.Error)) continue;
+                    await wordService.AddAsync(wordPair.Value, token);
+                }
+            }
+        }
+
+        private async void ExportCard_MouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
             using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             CancellationToken token = cts.Token;
             string filePath = "D:\\projects\\projects\\WordRepeat\\WordRepeat\\words.txt";
-            string[] lines = await File.ReadAllLinesAsync(filePath);
-            string[] pair;
             IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
-            ResultCreateModel<WordsPair> wordPair;
-            foreach (string line in lines)
+            int count = await wordService.CountAsync(token);
+            WordsPair pairs;
+            for (int i = 0; i < count; i++)
             {
-                pair = line.Split(' ');
-                if (string.IsNullOrEmpty(pair[0]) || string.IsNullOrEmpty(pair[1])) continue;
-                wordPair = WordsPair.Create(pair[0], pair[1]);
-                if (string.IsNullOrEmpty(wordPair.Error)) continue;
-                await wordService.AddAsync(wordPair.Value, token);
+                pairs = await wordService.GetByPositionAsync(i, token);
+                File.AppendAllText(filePath, $"{pairs.Word} {pairs.Translate}\n");
             }
         }
 
-        private void ExportWordsButton_Click(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-
+            WordsCountText.Text = _appData.Stats.CountWords.ToString();
         }
     }
 }
