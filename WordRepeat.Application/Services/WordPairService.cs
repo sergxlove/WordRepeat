@@ -59,5 +59,13 @@ namespace WordRepeat.Application.Services
         {
             return await _repository.GetByPositionAsync(position, token);
         }
+        public async Task<string> GetTranslateByPositionAsync(int position, CancellationToken token)
+        {
+            return await _repository.GetTranslateByPositionAsync(position, token);
+        }
+        public async Task<string> GetWordByPositionAsync(int position, CancellationToken token)
+        {
+            return await _repository.GetWordByPositionAsync(position, token);
+        }
     }
 }

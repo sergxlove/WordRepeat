@@ -14,5 +14,8 @@ namespace WordRepeat.DataAccess.Sqlite.Abstractions
         Task<List<WordsPair>> GetByWordAsync(string word, CancellationToken token);
         Task<List<WordsPair>> GetByTranslateAsync(string translate, CancellationToken token);
         Task<WordsPair> GetByPositionAsync(int position, CancellationToken token);
+        Task<string> GetTranslateByPositionAsync(int position, CancellationToken token);
+        Task<string> GetWordByPositionAsync(int position, CancellationToken token);
+
     }
 }

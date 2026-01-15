@@ -194,7 +194,7 @@
                             BorderThickness="1"
                             FontSize="14"
                             Margin="0,0,0,10"
-                            Click="OptionButton_Click">
+                            Click="OptionButtonOne_Click">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Cursor" Value="Hand"/>
@@ -231,7 +231,7 @@
                             BorderThickness="1"
                             FontSize="14"
                             Margin="0,0,0,10"
-                            Click="OptionButton_Click">
+                            Click="OptionButtonTwo_Click">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Cursor" Value="Hand"/>
@@ -267,7 +267,7 @@
                             BorderBrush="#FF555555"
                             BorderThickness="1"
                             FontSize="14"
-                            Click="OptionButton_Click">
+                            Click="OptionButtonThree_Click">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Cursor" Value="Hand"/>
@@ -323,7 +323,7 @@
 
                 <TextBox Grid.Row="1"
                          x:Name="AnswerTextBox" 
-                         Height="45"
+                         Height="60"
                          Background="#FF333333"
                          Foreground="White"
                          BorderBrush="#FF555555"
@@ -354,7 +354,8 @@
                         FontSize="14"
                         HorizontalAlignment="Right"
                         Margin="0,15,0,0"
-                        Click="CheckButton_Click"
+                        Visibility="Collapsed"
+                        Click="CheckButtonEnter_Click"
                         IsEnabled="False">
                     <Button.Style>
                         <Style TargetType="Button">
@@ -405,20 +406,21 @@
                             VerticalAlignment="Center">
                     <TextBlock x:Name="PreviousResultIcon" 
                                Text="❌" 
+                               Foreground="#FFD32F2F"
                                FontSize="20"
                                Margin="0,0,10,0"
                                Visibility="Collapsed"/>
 
                     <StackPanel>
                         <TextBlock x:Name="PreviousResultText" 
-                                   Text="Предыдущий ответ неверный" 
+                                   Text="Ответ неверный" 
                                    Foreground="#FFD32F2F"
-                                   FontSize="13"
+                                   FontSize="20"
                                    Visibility="Collapsed"/>
                         <TextBlock x:Name="CorrectAnswerText" 
-                                   Text="Правильно: apple" 
-                                   Foreground="#FFAAAAAA"
-                                   FontSize="12"
+                                   Text="Ответ верный" 
+                                   Foreground="Green"
+                                   FontSize="20"
                                    Visibility="Collapsed"/>
                     </StackPanel>
                 </StackPanel>
@@ -434,7 +436,7 @@
                             Foreground="White"
                             FontWeight="Bold"
                             FontSize="13"
-                            Click="CheckButton_Click"
+                            Click="CheckButtonOption_Click"
                             Visibility="Collapsed">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
