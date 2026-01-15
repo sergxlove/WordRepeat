@@ -406,6 +406,7 @@
                             VerticalAlignment="Center">
                     <TextBlock x:Name="PreviousResultIcon" 
                                Text="❌" 
+                               Foreground="#FFD32F2F"
                                FontSize="20"
                                Margin="0,0,10,0"
                                Visibility="Collapsed"/>
@@ -418,7 +419,7 @@
                                    Visibility="Collapsed"/>
                         <TextBlock x:Name="CorrectAnswerText" 
                                    Text="Ответ верный" 
-                                   Foreground="#FFAAAAAA"
+                                   Foreground="Green"
                                    FontSize="20"
                                    Visibility="Collapsed"/>
                     </StackPanel>
