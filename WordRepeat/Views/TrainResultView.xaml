@@ -292,32 +292,6 @@
                                 </Border>
                             </StackPanel>
                         </Grid>
-
-                        <!-- Прогресс-бар (опционально) -->
-                        <StackPanel Grid.Row="4" 
-                                    Margin="0,40,0,0">
-                            <TextBlock Text="Прогресс обучения"
-                                       Foreground="#FFAAAAAA"
-                                       FontSize="13"
-                                       Margin="0,0,0,10"/>
-
-                            <Border Background="#FF2A2A2A" 
-                                    CornerRadius="10"
-                                    Height="12">
-                                <Border x:Name="ProgressBarFill" 
-                                        Background="#FF4CAF50" 
-                                        CornerRadius="10"
-                                        Width="0"
-                                        HorizontalAlignment="Left"/>
-                            </Border>
-
-                            <TextBlock x:Name="ProgressText"
-                                       Text="75%"
-                                       Foreground="#FFAAAAAA"
-                                       FontSize="11"
-                                       HorizontalAlignment="Center"
-                                       Margin="0,5,0,0"/>
-                        </StackPanel>
                     </Grid>
                 </Border>
             </StackPanel>
@@ -349,7 +323,7 @@
                         FontSize="14"
                         HorizontalAlignment="Left"
                         Click="RestartButton_Click"
-                        Padding="20,0">
+                        Padding="20,10">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Cursor" Value="Hand"/>
@@ -360,7 +334,8 @@
                                         <Border Background="{TemplateBinding Background}"
                                                 CornerRadius="6">
                                             <ContentPresenter HorizontalAlignment="Center" 
-                                                              VerticalAlignment="Center"/>
+                                                              VerticalAlignment="Center"
+                                                              Margin="{TemplateBinding Padding}"/>
                                         </Border>
                                     </ControlTemplate>
                                 </Setter.Value>
@@ -385,7 +360,7 @@
                         FontSize="14"
                         HorizontalAlignment="Right"
                         Click="CloseButton_Click"
-                        Padding="20,0">
+                        Padding="20,10">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Cursor" Value="Hand"/>
@@ -396,7 +371,8 @@
                                         <Border Background="{TemplateBinding Background}"
                                                 CornerRadius="6">
                                             <ContentPresenter HorizontalAlignment="Center" 
-                                                              VerticalAlignment="Center"/>
+                                                              VerticalAlignment="Center"
+                                                              Margin="{TemplateBinding Padding}"/>
                                         </Border>
                                     </ControlTemplate>
                                 </Setter.Value>
