@@ -39,6 +39,30 @@ namespace WordRepeat.Views
         private void Timer_Tick(object sender, EventArgs e)
         {
             _seconds++;
+            TimerText.Text = TimeFromSeconds(_seconds);
+        }
+
+        private string TimeFromSeconds(int seconds)
+        {
+            int minutes = seconds / 60;
+            string result = string.Empty;
+            if(minutes < 10)
+            {
+                result += "0" + minutes.ToString() + ":";
+            }
+            else
+            {
+                result += minutes.ToString() + ":";
+            }
+            if(seconds % 60 < 10)
+            {
+                result += "0" + (seconds % 60).ToString();
+            }
+            else
+            {
+                result += (seconds % 60).ToString();
+            }
+            return result;
         }
 
         private void LoadData()
@@ -77,6 +101,21 @@ namespace WordRepeat.Views
                             break;
                     }
                     break;
+            }
+            _currentWord = 0;
+            _currentStreakWord = 0;
+            _wordDone = 0;
+            CurrentWordText.Text = $"{_currentWord + 1} из {_appData.Train.CountWord}";
+            CorrectCountText.Text = $"{_wordDone}";
+            UpdateProgressBar();
+            if(_appData.Train.IsTime)
+            {
+                _seconds = 0;
+                _timer.Start();
+            }
+            else
+            {
+                TimerText.Text = "--:--";
             }
         }
 
@@ -309,11 +348,51 @@ namespace WordRepeat.Views
         {
             if(_modeCheckButton)
             {
-
+                if (_currentWord == _appData.Train.CountWord)
+                {
+                    _timer.Stop();
+                    _appData.TrainResult.CountDone = _wordDone;
+                    _appData.TrainResult.Streak = _currentStreakWord;
+                    _appData.TrainResult.TrainingTimeSeconds = _seconds;
+                    if (_appData.Train.IsTime) TimerText.Text = "00:00";
+                    _appData.ChangeViewAction(VariableView.TrainResult);
+                    return;
+                }
+                CurrentWordText.Text = $"{_currentWord + 1} из {_appData.Train.CountWord}";
+                CorrectCountText.Text = $"{_wordDone}";
+                QuestionText.Text = _questionEnter[_currentWord].SelectWord;
+                _modeCheckButton = false;
+                CheckInputButton.Content = "Проверить";
+                UpdateProgressBar();
+                if (CorrectAnswerText.Visibility == Visibility.Visible)
+                    CorrectAnswerText.Visibility = Visibility.Collapsed;
+                if (PreviousResultText.Visibility == Visibility.Visible)
+                {
+                    PreviousResultText.Visibility = Visibility.Collapsed;
+                    PreviousResultIcon.Visibility = Visibility.Collapsed;
+                }
+                _responseEnter = string.Empty;
+                AnswerTextBox.Text = string.Empty;
             }
             else
             {
-                
+                _responseEnter = AnswerTextBox.Text;
+                if (string.IsNullOrEmpty(_responseEnter)) return;
+                if (_questionEnter[_currentWord].IsDone(_responseEnter))
+                {
+                    CorrectAnswerText.Visibility = Visibility.Visible;
+                    _wordDone++;
+                    _currentStreakWord++;
+                }
+                else
+                {
+                    _currentStreakWord = 0;
+                    PreviousResultIcon.Visibility = Visibility.Visible;
+                    PreviousResultText.Visibility = Visibility.Visible;
+                }
+                _currentWord++;
+                _modeCheckButton = true;
+                CheckInputButton.Content = "Следующий";
             }
         }
 
@@ -321,11 +400,15 @@ namespace WordRepeat.Views
         {
             if(_modeCheckButton)
             {
-                if(_currentWord + 1 == _appData.Train.CountWord)
+                if(_currentWord == _appData.Train.CountWord)
                 {
+                    _timer.Stop();
                     _appData.TrainResult.CountDone = _wordDone;
                     _appData.TrainResult.Streak = _currentStreakWord;
+                    _appData.TrainResult.TrainingTimeSeconds = _seconds;
+                    if (_appData.Train.IsTime) TimerText.Text = "00:00";
                     _appData.ChangeViewAction(VariableView.TrainResult);
+                    return;
                 }
                 CurrentWordText.Text = $"{_currentWord + 1} из {_appData.Train.CountWord}";
                 CorrectCountText.Text = $"{_wordDone}";
@@ -367,12 +450,22 @@ namespace WordRepeat.Views
 
         private void AnswerTextBox_TextChanged(object sender, RoutedEventArgs e)
         {
-            if(AnswerTextBox.Text.Length > 0) CheckInputButton.Visibility = Visibility.Visible;
-            else CheckInputButton.Visibility = Visibility.Collapsed;
+            if(AnswerTextBox.Text.Length > 0)
+            {
+                CheckInputButton.IsEnabled = true;
+                CheckInputButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                CheckInputButton.IsEnabled = true;
+                CheckInputButton.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void EndButton_Click(object sender, RoutedEventArgs e)
         {
+            _timer.Stop();
+            if (_appData.Train.IsTime) TimerText.Text = "00:00";
             _appData.ChangeViewAction(VariableView.Train);
         }
 
@@ -415,15 +508,21 @@ namespace WordRepeat.Views
         private void UpdateProgressBar()
         {
             double width = ProgressBarSpace.ActualWidth;
-            double widthProgres = width / _appData.Train.CountWord * (_currentWord + 1);
+            double widthProgres = width / _appData.Train.CountWord * _currentWord + 1;
             ProgressBarFill.Width = widthProgres;
-            ProgressText.Text = (100 / _appData.Train.CountWord * _currentWord + 1).ToString() + "%";
+            ProgressText.Text = (100 / _appData.Train.CountWord * _currentWord).ToString() + "%";
         }
 
         private class QuestionEnter
         {
             public string SelectWord { get; set; } = string.Empty;
             public string CorrectTranslate { get; set; } = string.Empty;
+
+            public bool IsDone(string response)
+            {
+                if (CorrectTranslate == response.Trim().ToLower()) return true;
+                return false;
+            }
         }
 
         private class QuestionOption
