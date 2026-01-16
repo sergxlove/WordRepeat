@@ -4,20 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WordRepeat.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800"
+             mc:Ignorable="d"
              HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch">
+             VerticalAlignment="Stretch"
+             Loaded="UserControl_Loaded">
 
-    <Grid Background="Transparent" Margin="0,0,-43,-220">
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- Верхняя панель -->
         <Border Grid.Row="0" 
-                Margin="10,10,10,0"
+                Margin="10,10,10,10"
                 Background="#FF1E1E1E" 
                 CornerRadius="8"
                 BorderBrush="#FF444444"
@@ -61,228 +62,268 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" 
-                Margin="10,20,10,20"
-                Background="#FF1A1A1A" 
-                CornerRadius="12"
-                BorderBrush="#FF333333"
-                BorderThickness="1">
+        <!-- Основной контент -->
+        <ScrollViewer Grid.Row="1" 
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="10,0,10,10">
+            <StackPanel>
+                <Border Margin="0,0,0,20"
+                        Background="#FF1A1A1A" 
+                        CornerRadius="12"
+                        BorderBrush="#FF333333"
+                        BorderThickness="1"
+                        Padding="30">
 
-            <Grid Margin="30">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" 
-                            HorizontalAlignment="Center"
-                            Margin="0,0,0,20">
-                    <TextBlock x:Name="ResultIcon" 
-                               Text="🏆" 
-                               FontSize="60"
-                               HorizontalAlignment="Center"
-                               Margin="0,0,0,10"/>
-
-                    <TextBlock x:Name="ResultTitleText"
-                               Text="ОТЛИЧНЫЙ РЕЗУЛЬТАТ!"
-                               Foreground="#FF4CAF50"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
-
-                <TextBlock Grid.Row="1"
-                           x:Name="ResultMessageText"
-                           Text="Вы отлично справились! Продолжайте в том же духе!"
-                           Foreground="#FFAAAAAA"
-                           FontSize="16"
-                           TextAlignment="Center"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,30"/>
-                
-                <Border Grid.Row="2" 
-                        Background="#FF2A2A2A" 
-                        CornerRadius="8" 
-                        Padding="40,30"
-                        Margin="0,0,0,40"
-                        HorizontalAlignment="Center"
-                        Width="400">
-                    <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="ВАШ СЧЕТ" 
-                                   Foreground="#FFAAAAAA" 
-                                   FontSize="12"
-                                   FontWeight="Bold"
-                                   Margin="0,0,0,15"
-                                   HorizontalAlignment="Center"/>
-
-                        <StackPanel Orientation="Horizontal" 
+                        <!-- Иконка и заголовок -->
+                        <StackPanel Grid.Row="0" 
                                     HorizontalAlignment="Center"
-                                    Margin="0,0,0,10">
-                            <TextBlock x:Name="CorrectAnswersText" 
-                                       Text="18" 
-                                       Foreground="#FF4CAF50" 
-                                       FontSize="48"
-                                       FontWeight="Bold"/>
-                            <TextBlock Text="/" 
-                                       Foreground="#FFAAAAAA" 
-                                       FontSize="48"
+                                    Margin="0,0,0,20">
+                            <TextBlock x:Name="ResultIcon" 
+                                       Text="🏆" 
+                                       FontSize="60"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,10"/>
+
+                            <TextBlock x:Name="ResultTitleText"
+                                       Text="ОТЛИЧНЫЙ РЕЗУЛЬТАТ!"
+                                       Foreground="#FF4CAF50"
+                                       FontSize="24"
                                        FontWeight="Bold"
-                                       Margin="15,0,15,0"/>
-                            <TextBlock x:Name="TotalQuestionsText" 
-                                       Text="20" 
-                                       Foreground="White" 
-                                       FontSize="48"
-                                       FontWeight="Bold"/>
+                                       HorizontalAlignment="Center"/>
                         </StackPanel>
 
-                        <TextBlock x:Name="PercentageText" 
-                                   Text="90%" 
-                                   Foreground="#FF4CAF50" 
-                                   FontSize="28"
-                                   FontWeight="Bold"
-                                   HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Border>
+                        <!-- Сообщение -->
+                        <TextBlock Grid.Row="1"
+                                   x:Name="ResultMessageText"
+                                   Text="Вы отлично справились! Продолжайте в том же духе!"
+                                   Foreground="#FFAAAAAA"
+                                   FontSize="16"
+                                   TextAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,30"/>
 
-                <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                        <!-- Основной счет -->
+                        <Border Grid.Row="2" 
+                                Background="#FF2A2A2A" 
+                                CornerRadius="8" 
+                                Padding="40,30"
+                                Margin="0,0,0,40"
+                                HorizontalAlignment="Center">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="ВАШ СЧЕТ" 
+                                           Foreground="#FFAAAAAA" 
+                                           FontSize="12"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,15"
+                                           HorizontalAlignment="Center"/>
 
-                    <StackPanel Grid.Column="0" 
-                                Margin="0,0,15,0">
-                        <Border Background="#FF2A2A2A" 
-                                CornerRadius="6" 
-                                Padding="15"
-                                Margin="0,0,0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock Grid.Column="0" 
-                                           Text="⏱️" 
-                                           FontSize="18"
-                                           Margin="0,0,15,0"/>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="ВРЕМЯ" 
-                                               Foreground="#FFAAAAAA" 
-                                               FontSize="11"/>
-                                    <TextBlock x:Name="TimeText" 
-                                               Text="02:45" 
-                                               Foreground="White" 
-                                               FontSize="16"
-                                               FontWeight="Bold"/>
-                                    <TextBlock x:Name="TimePerQuestionText"
-                                               Text="8.2 сек/вопрос"
-                                               Foreground="#FF888888"
-                                               FontSize="11"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <Border Background="#FF2A2A2A" 
-                                CornerRadius="6" 
-                                Padding="15"
-                                Margin="0,0,0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock Grid.Column="0" 
-                                           Text="✅" 
-                                           FontSize="18"
-                                           Margin="0,0,15,0"/>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="ПРАВИЛЬНЫЕ ОТВЕТЫ" 
-                                               Foreground="#FFAAAAAA" 
-                                               FontSize="11"/>
-                                    <TextBlock x:Name="CorrectCountText" 
+                                <StackPanel Orientation="Horizontal" 
+                                            HorizontalAlignment="Center"
+                                            Margin="0,0,0,10">
+                                    <TextBlock x:Name="CorrectAnswersText" 
                                                Text="18" 
                                                Foreground="#FF4CAF50" 
-                                               FontSize="16"
+                                               FontSize="48"
                                                FontWeight="Bold"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-
-                    <Rectangle Grid.Column="1"
-                               Width="1"
-                               Fill="#FF333333"
-                               Margin="15,0"
-                               VerticalAlignment="Stretch"/>
-
-                    <StackPanel Grid.Column="2" 
-                                Margin="15,0,0,0">
-                        <Border Background="#FF2A2A2A" 
-                                CornerRadius="6" 
-                                Padding="15"
-                                Margin="0,0,0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock Grid.Column="0" 
-                                           Text="❌" 
-                                           FontSize="18"
-                                           Margin="0,0,15,0"/>
-
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="ОШИБКИ" 
+                                    <TextBlock Text="/" 
                                                Foreground="#FFAAAAAA" 
-                                               FontSize="11"/>
-                                    <TextBlock x:Name="WrongCountText" 
-                                               Text="2" 
-                                               Foreground="#FFD32F2F" 
-                                               FontSize="16"
+                                               FontSize="48"
+                                               FontWeight="Bold"
+                                               Margin="15,0,15,0"/>
+                                    <TextBlock x:Name="TotalQuestionsText" 
+                                               Text="20" 
+                                               Foreground="White" 
+                                               FontSize="48"
                                                FontWeight="Bold"/>
                                 </StackPanel>
-                            </Grid>
+
+                                <TextBlock x:Name="PercentageText" 
+                                           Text="90%" 
+                                           Foreground="#FF4CAF50" 
+                                           FontSize="28"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
                         </Border>
 
-                        <Border Background="#FF2A2A2A" 
-                                CornerRadius="6" 
-                                Padding="15">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                        <!-- Детальная статистика -->
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" 
-                                           Text="🔥" 
-                                           FontSize="18"
-                                           Margin="0,0,15,0"/>
+                            <!-- Левая колонка -->
+                            <StackPanel Grid.Column="0" 
+                                        Margin="0,0,15,0">
+                                <Border Background="#FF2A2A2A" 
+                                        CornerRadius="6" 
+                                        Padding="15"
+                                        Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
 
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="ЛУЧШАЯ СЕРИЯ" 
-                                               Foreground="#FFAAAAAA" 
-                                               FontSize="11"/>
-                                    <TextBlock x:Name="BestStreakText" 
-                                               Text="10 правильных подряд" 
-                                               Foreground="#FFFF9800" 
-                                               FontSize="16"
-                                               FontWeight="Bold"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-                </Grid>
-            </Grid>
-        </Border>
+                                        <TextBlock Grid.Column="0" 
+                                                   Text="⏱️" 
+                                                   FontSize="18"
+                                                   Margin="0,0,15,0"/>
 
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="ВРЕМЯ" 
+                                                       Foreground="#FFAAAAAA" 
+                                                       FontSize="11"/>
+                                            <TextBlock x:Name="TimeText" 
+                                                       Text="02:45" 
+                                                       Foreground="White" 
+                                                       FontSize="16"
+                                                       FontWeight="Bold"/>
+                                            <TextBlock x:Name="TimePerQuestionText"
+                                                       Text="8.2 сек/вопрос"
+                                                       Foreground="#FF888888"
+                                                       FontSize="11"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <Border Background="#FF2A2A2A" 
+                                        CornerRadius="6" 
+                                        Padding="15">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" 
+                                                   Text="✅" 
+                                                   FontSize="18"
+                                                   Margin="0,0,15,0"/>
+
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="ПРАВИЛЬНЫЕ ОТВЕТЫ" 
+                                                       Foreground="#FFAAAAAA" 
+                                                       FontSize="11"/>
+                                            <TextBlock x:Name="CorrectCountText" 
+                                                       Text="18" 
+                                                       Foreground="#FF4CAF50" 
+                                                       FontSize="16"
+                                                       FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- Разделитель -->
+                            <Rectangle Grid.Column="1"
+                                       Width="1"
+                                       Fill="#FF333333"
+                                       Margin="15,0"
+                                       VerticalAlignment="Stretch"/>
+
+                            <!-- Правая колонка -->
+                            <StackPanel Grid.Column="2" 
+                                        Margin="15,0,0,0">
+                                <Border Background="#FF2A2A2A" 
+                                        CornerRadius="6" 
+                                        Padding="15"
+                                        Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" 
+                                                   Text="❌" 
+                                                   FontSize="18"
+                                                   Margin="0,0,15,0"/>
+
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="ОШИБКИ" 
+                                                       Foreground="#FFAAAAAA" 
+                                                       FontSize="11"/>
+                                            <TextBlock x:Name="WrongCountText" 
+                                                       Text="2" 
+                                                       Foreground="#FFD32F2F" 
+                                                       FontSize="16"
+                                                       FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <Border Background="#FF2A2A2A" 
+                                        CornerRadius="6" 
+                                        Padding="15">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" 
+                                                   Text="🔥" 
+                                                   FontSize="18"
+                                                   Margin="0,0,15,0"/>
+
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="ЛУЧШАЯ СЕРИЯ" 
+                                                       Foreground="#FFAAAAAA" 
+                                                       FontSize="11"/>
+                                            <TextBlock x:Name="BestStreakText" 
+                                                       Text="10 правильных подряд" 
+                                                       Foreground="#FFFF9800" 
+                                                       FontSize="16"
+                                                       FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Прогресс-бар (опционально) -->
+                        <StackPanel Grid.Row="4" 
+                                    Margin="0,40,0,0">
+                            <TextBlock Text="Прогресс обучения"
+                                       Foreground="#FFAAAAAA"
+                                       FontSize="13"
+                                       Margin="0,0,0,10"/>
+
+                            <Border Background="#FF2A2A2A" 
+                                    CornerRadius="10"
+                                    Height="12">
+                                <Border x:Name="ProgressBarFill" 
+                                        Background="#FF4CAF50" 
+                                        CornerRadius="10"
+                                        Width="0"
+                                        HorizontalAlignment="Left"/>
+                            </Border>
+
+                            <TextBlock x:Name="ProgressText"
+                                       Text="75%"
+                                       Foreground="#FFAAAAAA"
+                                       FontSize="11"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Нижняя панель с кнопками -->
         <Border Grid.Row="2" 
                 Margin="10,0,10,10"
                 Background="#FF1E1E1E" 
@@ -297,17 +338,18 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
+                <!-- Кнопка "Новая тренировка" -->
                 <Button Grid.Column="0"
                         x:Name="RestartButton"
                         Content="🔄 Новая тренировка"
-                        Width="160"
                         Height="40"
                         Background="#FF4CAF50"
                         Foreground="White"
                         FontWeight="Bold"
                         FontSize="14"
                         HorizontalAlignment="Left"
-                        Click="RestartButton_Click">
+                        Click="RestartButton_Click"
+                        Padding="20,0">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Cursor" Value="Hand"/>
@@ -331,18 +373,19 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                
-                <Button Grid.Column="1"
+
+                <!-- Кнопка "Завершить" -->
+                <Button Grid.Column="2"
                         x:Name="CloseButton"
                         Content="✓ Завершить"
-                        Width="140"
                         Height="40"
                         Background="#FF2196F3"
                         Foreground="White"
                         FontWeight="Bold"
                         FontSize="14"
-                        HorizontalAlignment="Center"
-                        Click="CloseButton_Click">
+                        HorizontalAlignment="Right"
+                        Click="CloseButton_Click"
+                        Padding="20,0">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Cursor" Value="Hand"/>

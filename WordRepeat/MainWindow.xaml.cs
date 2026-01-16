@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using WordRepeat.Abstractions;
@@ -60,8 +61,17 @@ namespace WordRepeat
             _settingView = new SettingView(_serviceProvider, _appData);
             _trainActionView = new TrainActionView(_serviceProvider, _appData);
             _trainResultView = new TrainResultView(_serviceProvider, _appData);
+            CreateAppData();
             ShowViews();
             SizeChanged += MainWindow_SizeChanged;
+        }
+
+        public async void CreateAppData()
+        {
+            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            CancellationToken token = cts.Token;
+            IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+            _appData.Stats.CountWords = await wordService.CountAsync(token);
         }
 
         private void MainButtonClick(object sender, RoutedEventArgs e)

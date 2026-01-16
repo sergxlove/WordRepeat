@@ -58,7 +58,8 @@
                                FontSize="11"
                                Margin="0,0,0,5"/>
 
-                    <Border Background="#FF2A2A2A" 
+                    <Border x:Name="ProgressBarSpace"
+                            Background="#FF2A2A2A" 
                             CornerRadius="10"
                             Height="12">
                         <Border x:Name="ProgressBarFill" 
