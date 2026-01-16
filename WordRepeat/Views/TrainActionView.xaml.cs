@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using WordRepeat.Application.Abstractions;
 using WordRepeat.Core.Models;
 using WordRepeat.Enums;
@@ -14,13 +15,15 @@ namespace WordRepeat.Views
         private ServiceProvider _serviceProvider;
         private AppData _appData;
         private int _currentWord = 0;
+        private int _currentStreakWord = 0;
         private int _wordDone = 0;
         private int _variableResponce = 0;
         private string _responseEnter = string.Empty;
-        private int _stepProgress;
         private List<QuestionOption> _questions;
         private List<QuestionEnter> _questionEnter;
         private bool _modeCheckButton;
+        private DispatcherTimer _timer;
+        private int _seconds = 0;
         public TrainActionView(ServiceProvider serviceProvider, AppData appData)
         {
             InitializeComponent();
@@ -28,6 +31,14 @@ namespace WordRepeat.Views
             _appData = appData;
             _questions = new List<QuestionOption>();
             _questionEnter = new List<QuestionEnter>();
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += Timer_Tick!;
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            _seconds++;
         }
 
         private void LoadData()
@@ -67,8 +78,6 @@ namespace WordRepeat.Views
                     }
                     break;
             }
-
-            
         }
 
         private async void CreateQuestionsOptionWT()
@@ -83,23 +92,23 @@ namespace WordRepeat.Views
             {
                 QuestionOption question = new QuestionOption();
                 targetPair = await wordService
-                    .GetByPositionAsync(random.Next(0, _appData.Train.CountWord), token);
+                    .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                 if (!IsUniqueQuestionOption(targetPair.Word, targetPair.Translate)) continue;
                 i++;
                 question.SelectWord = targetPair.Word;
                 question.CorrectTranslate = targetPair.Translate;
                 question.FieldResponse(targetPair.Translate,
                     await wordService.GetTranslateByPositionAsync(
-                        random.Next(0, _appData.Train.CountWord), token),
+                        random.Next(0, _appData.Stats.CountWords), token),
                     await wordService.GetTranslateByPositionAsync(
-                        random.Next(0, _appData.Train.CountWord), token));
+                        random.Next(0, _appData.Stats.CountWords), token));
                 _questions.Add(question);
             }
         }
 
         private async void CreateQuestionsOptionTW()
         {
-            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(3000));
+            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             CancellationToken token = cts.Token;
             IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
             WordsPair targetPair;
@@ -109,16 +118,16 @@ namespace WordRepeat.Views
             {
                 QuestionOption question = new QuestionOption();
                 targetPair = await wordService
-                    .GetByPositionAsync(random.Next(0, _appData.Train.CountWord), token);
+                    .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                 if (!IsUniqueQuestionOption(targetPair.Word, targetPair.Translate)) continue;
                 i++;
                 question.SelectWord = targetPair.Translate;
                 question.CorrectTranslate = targetPair.Word;
                 question.FieldResponse(targetPair.Word,
                     await wordService.GetWordByPositionAsync(
-                        random.Next(0, _appData.Train.CountWord), token),
+                        random.Next(0, _appData.Stats.CountWords), token),
                     await wordService.GetWordByPositionAsync(
-                        random.Next(0, _appData.Train.CountWord), token));
+                        random.Next(0, _appData.Stats.CountWords), token));
                 _questions.Add(question);
             }
         }
@@ -138,32 +147,32 @@ namespace WordRepeat.Views
                 if (mode)
                 {
                     targetPair = await wordService
-                        .GetByPositionAsync(random.Next(0, _appData.Train.CountWord), token);
+                        .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                     if (!IsUniqueQuestionOption(targetPair.Word, targetPair.Translate)) continue;
                     i++;
                     question.SelectWord = targetPair.Word;
                     question.CorrectTranslate = targetPair.Translate;
                     question.FieldResponse(targetPair.Translate,
                         await wordService.GetTranslateByPositionAsync(
-                            random.Next(0, _appData.Train.CountWord), token),
+                            random.Next(0, _appData.Stats.CountWords), token),
                         await wordService.GetTranslateByPositionAsync(
-                            random.Next(0, _appData.Train.CountWord), token));
+                            random.Next(0, _appData.Stats.CountWords), token));
                     _questions.Add(question);
                     mode = false;
                 }
                 else
                 {
                     targetPair = await wordService
-                        .GetByPositionAsync(random.Next(0, _appData.Train.CountWord), token);
+                        .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                     if (!IsUniqueQuestionOption(targetPair.Word, targetPair.Translate)) continue;
                     i++;
                     question.SelectWord = targetPair.Translate;
                     question.CorrectTranslate = targetPair.Word;
                     question.FieldResponse(targetPair.Word,
                         await wordService.GetWordByPositionAsync(
-                            random.Next(0, _appData.Train.CountWord), token),
+                            random.Next(0, _appData.Stats.CountWords), token),
                         await wordService.GetWordByPositionAsync(
-                            random.Next(0, _appData.Train.CountWord), token));
+                            random.Next(0, _appData.Stats.CountWords), token));
                     _questions.Add(question);
                     mode = true;
                 }
@@ -182,7 +191,7 @@ namespace WordRepeat.Views
             {
                 QuestionEnter question = new QuestionEnter();
                 targetPair = await wordService
-                        .GetByPositionAsync(random.Next(0, _appData.Train.CountWord), token);
+                        .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                 if (!IsUniqueQuestionEnter(targetPair.Word, targetPair.Translate)) continue;
                 i++;
                 question.SelectWord = targetPair.Word;
@@ -203,7 +212,7 @@ namespace WordRepeat.Views
             {
                 QuestionEnter question = new QuestionEnter();
                 targetPair = await wordService
-                        .GetByPositionAsync(random.Next(0, _appData.Train.CountWord), token);
+                        .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                 if(!IsUniqueQuestionEnter(targetPair.Translate, targetPair.Word)) continue;
                 i++;
                 question.SelectWord = targetPair.Translate;
@@ -226,7 +235,7 @@ namespace WordRepeat.Views
                 if (mode)
                 {
                     targetPair = await wordService
-                        .GetByPositionAsync(random.Next(0, _appData.Train.CountWord), token);
+                        .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                     if (!IsUniqueQuestionEnter(targetPair.Word, targetPair.Translate)) continue;
                     i++;
                     question.SelectWord = targetPair.Word;
@@ -237,7 +246,7 @@ namespace WordRepeat.Views
                 else
                 {
                     targetPair = await wordService
-                        .GetByPositionAsync(random.Next(0, _appData.Train.CountWord), token);
+                        .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                     if (!IsUniqueQuestionEnter(targetPair.Translate, targetPair.Word)) continue;
                     i++;
                     question.SelectWord = targetPair.Translate;
@@ -312,8 +321,10 @@ namespace WordRepeat.Views
         {
             if(_modeCheckButton)
             {
-                if(_currentWord == _appData.Train.CountWord)
+                if(_currentWord + 1 == _appData.Train.CountWord)
                 {
+                    _appData.TrainResult.CountDone = _wordDone;
+                    _appData.TrainResult.Streak = _currentStreakWord;
                     _appData.ChangeViewAction(VariableView.TrainResult);
                 }
                 CurrentWordText.Text = $"{_currentWord + 1} из {_appData.Train.CountWord}";
@@ -323,7 +334,7 @@ namespace WordRepeat.Views
                 _modeCheckButton = false;
                 CheckButton.Content = "Проверить";
                 ResetButtons();
-
+                UpdateProgressBar();
                 if (CorrectAnswerText.Visibility == Visibility.Visible)
                     CorrectAnswerText.Visibility = Visibility.Collapsed;
                 if (PreviousResultText.Visibility == Visibility.Visible)
@@ -331,16 +342,20 @@ namespace WordRepeat.Views
                     PreviousResultText.Visibility = Visibility.Collapsed;
                     PreviousResultIcon.Visibility = Visibility.Collapsed;
                 }
+                _variableResponce = 0;
             }
             else
             {
+                if (_variableResponce == 0) return;
                 if (_questions[_currentWord].IsDone(_variableResponce))
                 {
                     CorrectAnswerText.Visibility = Visibility.Visible;
                     _wordDone++;
+                    _currentStreakWord++;
                 }
                 else
                 {
+                    _currentStreakWord = 0;
                     PreviousResultIcon.Visibility = Visibility.Visible;
                     PreviousResultText.Visibility = Visibility.Visible;
                 }
@@ -382,7 +397,6 @@ namespace WordRepeat.Views
             }
             _modeCheckButton = false;
             TotalCountText.Text = _appData.Train.CountWord.ToString();
-            _stepProgress = 100 / _appData.Train.CountWord;
         }
 
         private void ResetButtons()
@@ -396,6 +410,14 @@ namespace WordRepeat.Views
             Option3Button.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF2A2A2A")!;
             Option3Button.Foreground = Brushes.White;
             Option3Button.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF555555")!;
+        } 
+
+        private void UpdateProgressBar()
+        {
+            double width = ProgressBarSpace.ActualWidth;
+            double widthProgres = width / _appData.Train.CountWord * (_currentWord + 1);
+            ProgressBarFill.Width = widthProgres;
+            ProgressText.Text = (100 / _appData.Train.CountWord * _currentWord + 1).ToString() + "%";
         }
 
         private class QuestionEnter

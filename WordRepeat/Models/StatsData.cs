@@ -2,7 +2,7 @@
 {
     public class StatsData
     {
-        public int CountWords { get; set; }
+        public int CountWords { get; set; } 
         public DateOnly LastTrain { get; set; }
         public string LastTrainResult { get; set; } = string.Empty;
         public int AverageTrain { get; set; }
