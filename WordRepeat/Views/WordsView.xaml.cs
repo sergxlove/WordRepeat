@@ -25,7 +25,11 @@ namespace WordRepeat.Views
             _wordsPairAll = new ObservableCollection<WordsPair>();
             _appData = appData; 
             WordsDataGrid.ItemsSource = _wordsPairAll;
-            _sizePage = Convert.ToInt32(PageSizeComboBox.Text);
+            if (PageSizeComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string text = selectedItem.Content.ToString()!;
+                _sizePage = Convert.ToInt32(text);
+            }
             LoadData();
         }
 
@@ -64,6 +68,8 @@ namespace WordRepeat.Views
                 notification.ShowError("Необходимо ввести перевод");
             }
             IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+            IHistoryAddServices historyService = _serviceProvider
+                .GetRequiredService<IHistoryAddServices>();
             ResultCreateModel<WordsPair> wordPair = WordsPair.Create(word, translate);
             if(!string.IsNullOrEmpty(wordPair.Error))
             {
@@ -76,6 +82,23 @@ namespace WordRepeat.Views
                 return;
             }
             Guid result = await wordService.AddAsync(wordPair.Value, token);
+            ResultCreateModel<HistoryAdd> history = HistoryAdd.Create("Добавление новых слов", 1);
+            if(history.IsSuccess)
+            {
+                if (await historyService.CheckByDateAsync(history.Value.Date, token))
+                {
+                    await historyService.UpdateCountAsync(1, history.Value.Date, token);
+                }
+                else
+                {
+                    IHistoryTypesService historyTypesService = _serviceProvider
+                        .GetRequiredService<IHistoryTypesService>();
+                    ResultCreateModel<HistoryTypes> historyTypes = HistoryTypes
+                        .Create(history.Value.Id, "add");
+                    await historyTypesService.AddAsync(historyTypes.Value, token);
+                    await historyService.AddAsync(history.Value, token);
+                }
+            }
             notification.ShowSuccess("Пара успешно добавлена");
             _totalWords++;
             WordTextBox.Text = "";
@@ -180,6 +203,15 @@ namespace WordRepeat.Views
         {
             if (_totalWords <= _sizePage) return 1;
             return (int)Math.Ceiling((double)_totalWords / _sizePage);
+        }
+
+        private void PageSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (PageSizeComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string text = selectedItem.Content.ToString()!;
+                _sizePage = Convert.ToInt32(text);
+            }
         }
     }
 }

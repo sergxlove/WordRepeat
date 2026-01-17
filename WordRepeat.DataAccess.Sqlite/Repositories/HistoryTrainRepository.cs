@@ -34,5 +34,25 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
             }
             return result;
         }
+
+        public async Task<bool> CheckByDateAsync(DateOnly date, CancellationToken token)
+        {
+            HistoryTrainEntity? result = await _context.HistoryTrainTable
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.Date == date, token);
+            if (result is null) return false;
+            return true;
+        }
+
+        public async Task<int> UpdateCountAsync(int done, int total, DateOnly date, 
+            CancellationToken token)
+        {
+            return await _context.HistoryTrainTable
+                .AsNoTracking()
+                .Where(a => a.Date == date)
+                .ExecuteUpdateAsync(a => a
+                .SetProperty(a => a.Result, a => a.Result + done)
+                .SetProperty(a => a.Total, a => a.Total + total), token);
+        }
     }
 }

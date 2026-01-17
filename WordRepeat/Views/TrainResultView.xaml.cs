@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
+using WordRepeat.Application.Abstractions;
+using WordRepeat.Core.Infrastructures;
+using WordRepeat.Core.Models;
 using WordRepeat.Enums;
 using WordRepeat.Models;
 
@@ -27,8 +30,10 @@ namespace WordRepeat.Views
             _appData.ChangeViewAction(VariableView.Train);
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            CancellationToken token = cts.Token;
             CorrectAnswersText.Text = _appData.TrainResult.CountDone.ToString();
             TotalQuestionsText.Text = _appData.Train.CountWord.ToString();
             PercentageText.Text = (100 / _appData.Train.CountWord * _appData.TrainResult.CountDone)
@@ -39,6 +44,25 @@ namespace WordRepeat.Views
             CorrectCountText.Text = _appData.TrainResult.CountDone.ToString();
             WrongCountText.Text = (_appData.Train.CountWord - _appData.TrainResult.CountDone).ToString();
             BestStreakText.Text = _appData.TrainResult.Streak.ToString();
+            ResultCreateModel<HistoryTrain> historyTrain = HistoryTrain.Create("Тренировка",
+                _appData.TrainResult.CountDone, _appData.Train.CountWord);
+            IHistoryTrainService historyTrainService = _serviceProvider
+                .GetRequiredService<IHistoryTrainService>();
+            if(await historyTrainService.CheckByDateAsync(historyTrain.Value.Date, token))
+            {
+                await historyTrainService.UpdateCountAsync(_appData.TrainResult.CountDone,
+                    _appData.Train.CountWord, historyTrain.Value.Date, token);
+            }
+            else
+            {
+                IHistoryTypesService historyTypesService = _serviceProvider
+                        .GetRequiredService<IHistoryTypesService>();
+                ResultCreateModel<HistoryTypes> historyTypes = HistoryTypes
+                    .Create(historyTrain.Value.Id, "train");
+                await historyTrainService.AddAsync(historyTrain.Value, token);
+                await historyTypesService.AddAsync(historyTypes.Value, token);
+            }
+
         }
 
         private string TimeFromSeconds(int seconds)

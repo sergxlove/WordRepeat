@@ -10,7 +10,6 @@
              VerticalAlignment="Stretch">
 
     <UserControl.Resources>
-        <!-- Стиль для темного ComboBox -->
         <Style x:Key="DarkComboBoxStyle" TargetType="ComboBox">
             <Setter Property="Background" Value="#FF1A1A1A"/>
             <Setter Property="Foreground" Value="White"/>
@@ -122,7 +121,6 @@
             </Setter>
         </Style>
 
-        <!-- Стиль для элементов ComboBox -->
         <Style TargetType="ComboBoxItem">
             <Setter Property="Background" Value="#FF1A1A1A"/>
             <Setter Property="Foreground" Value="White"/>
@@ -137,7 +135,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Стиль для заголовков DataGrid -->
         <Style x:Key="DataGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#FF2A2A2A"/>
             <Setter Property="Foreground" Value="#FFAAAAAA"/>
@@ -149,7 +146,6 @@
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
 
-        <!-- Стиль для RadioButton -->
         <Style x:Key="DarkRadioButtonStyle" TargetType="RadioButton">
             <Setter Property="Foreground" Value="#FFAAAAAA"/>
             <Setter Property="FontSize" Value="12"/>
@@ -164,7 +160,6 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <!-- Кружок RadioButton -->
                             <Ellipse x:Name="OuterEllipse"
                                      Grid.Column="0"
                                      Width="14" Height="14"
@@ -173,7 +168,6 @@
                                      Fill="#FF2A2A2A"
                                      Margin="0,0,5,0"/>
 
-                            <!-- Внутренняя точка при выборе -->
                             <Ellipse x:Name="InnerEllipse"
                                      Grid.Column="0"
                                      Width="8" Height="8"
@@ -181,7 +175,6 @@
                                      Margin="0,0,5,0"
                                      Visibility="Hidden"/>
 
-                            <!-- Текст -->
                             <ContentPresenter Grid.Column="1"
                                               Content="{TemplateBinding Content}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
@@ -566,6 +559,7 @@
                               Width="70" 
                               Height="25"
                               SelectedIndex="0"
+                              SelectionChanged="PageSizeComboBox_SelectionChanged"
                               Style="{StaticResource DarkComboBoxStyle}">
                         <ComboBoxItem Content="10"/>
                         <ComboBoxItem Content="25" IsSelected="True"/>
