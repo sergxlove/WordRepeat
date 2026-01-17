@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
 using System.Windows.Controls;
 using WordRepeat.Models;
 
@@ -13,6 +14,26 @@ namespace WordRepeat.Views
             InitializeComponent();
             _serviceProvider = serviceProvider;
             _appData = appData;
+        }
+
+        private void FirstPageButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PrevPageButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NextPageButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void LastPageButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

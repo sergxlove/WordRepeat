@@ -49,6 +49,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="Height" Value="25"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
@@ -124,11 +125,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="10">
-            <TextBlock Text="История тренировок" 
+            <TextBlock Text="История активности" 
                        Foreground="White" 
                        FontSize="24" 
                        FontWeight="Bold"/>
-            <TextBlock Text="Просматривайте историю ваших тренировок и отслеживайте прогресс" 
+            <TextBlock Text="Просматривайте историю вашей активности и отслеживайте прогресс" 
                        Foreground="#FFAAAAAA" 
                        FontSize="13"
                        Margin="0,5,0,0"/>
@@ -160,30 +161,7 @@
 
 
                         <StackPanel Grid.Column="0" Orientation="Horizontal">
-                            <TextBlock Text="📅" 
-                                       FontSize="16" 
-                                       VerticalAlignment="Center"
-                                       Foreground="White" 
-                                       Margin="0,0,10,0"/>
-                            <ComboBox Width="150" 
-                                      Height="30" 
-                                      Style="{StaticResource DarkComboBoxStyle}"
-                                      FontSize="13">
-                                <ComboBoxItem Content="Все даты" IsSelected="True"/>
-                                <ComboBoxItem Content="Сегодня"/>
-                                <ComboBoxItem Content="За неделю"/>
-                                <ComboBoxItem Content="За месяц"/>
-                            </ComboBox>
-
-                            <ComboBox Width="120" 
-                                      Height="30" 
-                                      Style="{StaticResource DarkComboBoxStyle}"
-                                      FontSize="13"
-                                      Margin="10,0,0,0">
-                                <ComboBoxItem Content="Все режимы"/>
-                                <ComboBoxItem Content="Слово → Перевод"/>
-                                <ComboBoxItem Content="Перевод → Слово"/>
-                            </ComboBox>
+                            
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -196,13 +174,6 @@
                                     FontSize="13"
                                     Margin="0,0,10,0"/>
 
-                            <Button Content="🗑️ Очистить" 
-                                    Width="110" 
-                                    Height="30"
-                                    Background="#FFD32F2F"
-                                    Foreground="White"
-                                    BorderThickness="0"
-                                    FontSize="13"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -345,85 +316,95 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
+                <StackPanel Grid.Column="0" Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#FF4CAF50" 
+                                CornerRadius="5" 
+                                Padding="10,5"
+                                Margin="0,0,10,0">
+                            <StackPanel>
+                                <TextBlock Text="Всего историй" 
+                                           Foreground="White" 
+                                           FontSize="11"/>
+                                <TextBlock x:Name="TotalHistoryCount" 
+                                           Text="0" 
+                                           Foreground="White" 
+                                           FontSize="18"
+                                           FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+
                 <StackPanel Grid.Column="1" 
                             Orientation="Horizontal" 
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Right">
+                            VerticalAlignment="Center">
 
-                    <Button Content="❮❮" 
-                            Width="40" Height="40"
-                            Background="#FF2A2A2A"
-                            Foreground="White"
-                            BorderBrush="#FF555555"
-                            BorderThickness="1"
-                            ToolTip="Первая страница"/>
-
-                    <Button Content="❮" 
-                            Width="40" Height="40"
-                            Background="#FF2A2A2A"
-                            Foreground="White"
-                            BorderBrush="#FF555555"
-                            BorderThickness="0,1,0,1"
-                            ToolTip="Предыдущая страница"/>
-
-                    <Border Background="#FF2A2A2A"
-                            BorderBrush="#FF555555"
-                            BorderThickness="0,1,0,1"
-                            Height="40"
-                            Padding="15,0">
-                        <StackPanel Orientation="Horizontal" 
-                                    VerticalAlignment="Center">
-                            <TextBlock Text="Страница" 
-                                       Foreground="#FFAAAAAA"
-                                       VerticalAlignment="Center"
-                                       Margin="0,0,10,0"/>
-
-                            <TextBox Width="40" 
-                                     Height="25"
-                                     Text="1"
-                                     Background="Transparent"
-                                     Foreground="White"
-                                     BorderThickness="0"
-                                     TextAlignment="Center"
-                                     VerticalContentAlignment="Center"
-                                     VerticalAlignment="Center"/>
-
-                            <TextBlock Text="из" 
-                                       Foreground="#FFAAAAAA"
-                                       VerticalAlignment="Center"
-                                       Margin="10,0,10,0"/>
-
-                            <TextBlock Text="1" 
-                                       Foreground="White"
-                                       FontWeight="Bold"
-                                       VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
-
-                    <Button Content="❯" 
-                            Width="40" Height="40"
-                            Background="#FF2A2A2A"
-                            Foreground="White"
-                            BorderBrush="#FF555555"
-                            BorderThickness="0,1,0,1"
-                            ToolTip="Следующая страница"/>
-
-                    <Button Content="❯❯" 
-                            Width="40" Height="40"
-                            Background="#FF2A2A2A"
-                            Foreground="White"
-                            BorderBrush="#FF555555"
-                            BorderThickness="1"
-                            ToolTip="Последняя страница"
-                            Margin="0,0,20,0"/>
-
-                    <TextBlock Text="Показывать:" 
+                    <TextBlock Text="Страница" 
                                Foreground="#FFAAAAAA"
                                VerticalAlignment="Center"
                                Margin="0,0,10,0"/>
 
-                    <ComboBox Width="80" 
-                              Height="35"
+                    <TextBlock x:Name="CurrentPageText" 
+                               Text="1" 
+                               Foreground="White"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"/>
+
+                    <TextBlock Text="из" 
+                               Foreground="#FFAAAAAA"
+                               VerticalAlignment="Center"
+                               Margin="10,0,10,0"/>
+
+                    <TextBlock x:Name="TotalPagesText" 
+                               Text="1" 
+                               Foreground="White"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"/>
+
+                    <Button x:Name="FirstPageButton" 
+                            Content="❮❮" 
+                            Width="35" Height="25"
+                            Background="#FF2A2A2A"
+                            Foreground="White"
+                            Margin="20,0,5,0"
+                            ToolTip="Первая страница"
+                            Click="FirstPageButton_Click"/>
+
+                    <Button x:Name="PrevPageButton" 
+                            Content="❮" 
+                            Width="35" Height="25"
+                            Background="#FF2A2A2A"
+                            Foreground="White"
+                            Margin="0,0,5,0"
+                            ToolTip="Предыдущая страница"
+                            Click="PrevPageButton_Click"/>
+
+                    <Button x:Name="NextPageButton" 
+                            Content="❯" 
+                            Width="35" Height="25"
+                            Background="#FF2A2A2A"
+                            Foreground="White"
+                            Margin="0,0,5,0"
+                            ToolTip="Следующая страница"
+                            Click="NextPageButton_Click"/>
+
+                    <Button x:Name="LastPageButton" 
+                            Content="❯❯" 
+                            Width="35" Height="25"
+                            Background="#FF2A2A2A"
+                            Foreground="White"
+                            ToolTip="Последняя страница"
+                            Click="LastPageButton_Click"/>
+
+                    <TextBlock Text="Показывать:" 
+                               Foreground="#FFAAAAAA"
+                               VerticalAlignment="Center"
+                               Margin="20,0,10,0"/>
+
+                    <ComboBox x:Name="PageSizeComboBox" 
+                              Width="70" 
+                              Height="25"
                               SelectedIndex="1"
                               Style="{StaticResource DarkComboBoxStyle}">
                         <ComboBoxItem Content="10"/>

@@ -20,5 +20,14 @@ namespace WordRepeat.Application.Services
         {
             return await _repository.GetAllAsync(token);
         }
+        public async Task<bool> CheckByDateAsync(DateOnly date, CancellationToken token)
+        {
+            return await _repository.CheckByDateAsync(date, token);
+        }
+        public async Task<int> UpdateCountAsync(int done, int total, DateOnly date, 
+            CancellationToken token)
+        {
+            return await _repository.UpdateCountAsync(done, total, date, token);
+        }
     }
 }
