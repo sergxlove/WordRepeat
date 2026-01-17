@@ -16,6 +16,7 @@ namespace WordRepeat.Views
         private AppData _appData;
         private int _currentWord = 0;
         private int _currentStreakWord = 0;
+        private int _bestStreakWord = 0;
         private int _wordDone = 0;
         private int _variableResponce = 0;
         private string _responseEnter = string.Empty;
@@ -103,6 +104,7 @@ namespace WordRepeat.Views
                     break;
             }
             _currentWord = 0;
+            _bestStreakWord = 0;
             _currentStreakWord = 0;
             _wordDone = 0;
             CurrentWordText.Text = $"{_currentWord + 1} из {_appData.Train.CountWord}";
@@ -352,7 +354,8 @@ namespace WordRepeat.Views
                 {
                     _timer.Stop();
                     _appData.TrainResult.CountDone = _wordDone;
-                    _appData.TrainResult.Streak = _currentStreakWord;
+                    if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
+                    _appData.TrainResult.Streak = _bestStreakWord;
                     _appData.TrainResult.TrainingTimeSeconds = _seconds;
                     if (_appData.Train.IsTime) TimerText.Text = "00:00";
                     _appData.ChangeViewAction(VariableView.TrainResult);
@@ -386,6 +389,7 @@ namespace WordRepeat.Views
                 }
                 else
                 {
+                    if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
                     _currentStreakWord = 0;
                     PreviousResultIcon.Visibility = Visibility.Visible;
                     PreviousResultText.Visibility = Visibility.Visible;
@@ -404,7 +408,8 @@ namespace WordRepeat.Views
                 {
                     _timer.Stop();
                     _appData.TrainResult.CountDone = _wordDone;
-                    _appData.TrainResult.Streak = _currentStreakWord;
+                    if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
+                    _appData.TrainResult.Streak = _bestStreakWord;
                     _appData.TrainResult.TrainingTimeSeconds = _seconds;
                     if (_appData.Train.IsTime) TimerText.Text = "00:00";
                     _appData.ChangeViewAction(VariableView.TrainResult);
@@ -438,6 +443,7 @@ namespace WordRepeat.Views
                 }
                 else
                 {
+                    if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
                     _currentStreakWord = 0;
                     PreviousResultIcon.Visibility = Visibility.Visible;
                     PreviousResultText.Visibility = Visibility.Visible;

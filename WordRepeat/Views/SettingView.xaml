@@ -221,7 +221,7 @@
                                        FontSize="14"
                                        Width="120"/>
                             <TextBlock x:Name="DataSizeText"
-                                       Text="0 МБ" 
+                                       Text="0 КБ" 
                                        Foreground="White" 
                                        FontSize="14"/>
                         </StackPanel>

@@ -16,7 +16,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Верхняя панель -->
         <Border Grid.Row="0" 
                 Margin="10,10,10,10"
                 Background="#FF1E1E1E" 
@@ -62,7 +61,6 @@
             </Grid>
         </Border>
 
-        <!-- Основной контент -->
         <ScrollViewer Grid.Row="1" 
                       VerticalScrollBarVisibility="Auto"
                       Margin="10,0,10,10">
@@ -83,13 +81,13 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Иконка и заголовок -->
                         <StackPanel Grid.Row="0" 
                                     HorizontalAlignment="Center"
                                     Margin="0,0,0,20">
                             <TextBlock x:Name="ResultIcon" 
                                        Text="🏆" 
                                        FontSize="60"
+                                       Foreground="White"
                                        HorizontalAlignment="Center"
                                        Margin="0,0,0,10"/>
 
@@ -101,7 +99,6 @@
                                        HorizontalAlignment="Center"/>
                         </StackPanel>
 
-                        <!-- Сообщение -->
                         <TextBlock Grid.Row="1"
                                    x:Name="ResultMessageText"
                                    Text="Вы отлично справились! Продолжайте в том же духе!"
@@ -111,7 +108,6 @@
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,30"/>
 
-                        <!-- Основной счет -->
                         <Border Grid.Row="2" 
                                 Background="#FF2A2A2A" 
                                 CornerRadius="8" 
@@ -155,7 +151,6 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Детальная статистика -->
                         <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -163,7 +158,6 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <!-- Левая колонка -->
                             <StackPanel Grid.Column="0" 
                                         Margin="0,0,15,0">
                                 <Border Background="#FF2A2A2A" 
@@ -178,6 +172,7 @@
 
                                         <TextBlock Grid.Column="0" 
                                                    Text="⏱️" 
+                                                   Foreground="White"
                                                    FontSize="18"
                                                    Margin="0,0,15,0"/>
 
@@ -209,6 +204,7 @@
 
                                         <TextBlock Grid.Column="0" 
                                                    Text="✅" 
+                                                   Foreground="White"
                                                    FontSize="18"
                                                    Margin="0,0,15,0"/>
 
@@ -226,14 +222,12 @@
                                 </Border>
                             </StackPanel>
 
-                            <!-- Разделитель -->
                             <Rectangle Grid.Column="1"
                                        Width="1"
                                        Fill="#FF333333"
                                        Margin="15,0"
                                        VerticalAlignment="Stretch"/>
-
-                            <!-- Правая колонка -->
+                            
                             <StackPanel Grid.Column="2" 
                                         Margin="15,0,0,0">
                                 <Border Background="#FF2A2A2A" 
@@ -248,6 +242,7 @@
 
                                         <TextBlock Grid.Column="0" 
                                                    Text="❌" 
+                                                   Foreground="White"
                                                    FontSize="18"
                                                    Margin="0,0,15,0"/>
 
@@ -276,6 +271,7 @@
                                         <TextBlock Grid.Column="0" 
                                                    Text="🔥" 
                                                    FontSize="18"
+                                                   Foreground="White"
                                                    Margin="0,0,15,0"/>
 
                                         <StackPanel Grid.Column="1">
@@ -297,7 +293,6 @@
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Нижняя панель с кнопками -->
         <Border Grid.Row="2" 
                 Margin="10,0,10,10"
                 Background="#FF1E1E1E" 
@@ -312,7 +307,6 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Кнопка "Новая тренировка" -->
                 <Button Grid.Column="0"
                         x:Name="RestartButton"
                         Content="🔄 Новая тренировка"
@@ -349,7 +343,6 @@
                     </Button.Style>
                 </Button>
 
-                <!-- Кнопка "Завершить" -->
                 <Button Grid.Column="2"
                         x:Name="CloseButton"
                         Content="✓ Завершить"
