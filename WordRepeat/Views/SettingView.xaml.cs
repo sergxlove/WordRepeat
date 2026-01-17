@@ -90,6 +90,20 @@ namespace WordRepeat.Views
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             WordsCountText.Text = _appData.Stats.CountWords.ToString();
+            DataSizeText.Text = GetLengthDb().ToString() + " КБ";
+        }
+
+        private long GetLengthDb()
+        {
+            string filePath = "D:\\projects\\projects\\WordRepeat\\WordRepeat\\data.db";
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"Файл не найден: {filePath}");
+            }
+            FileInfo fileInfo = new FileInfo(filePath);
+            long sizeInBytes = fileInfo.Length;
+            long sizeInKB = sizeInBytes / 1024;
+            return sizeInKB;
         }
     }
 }
