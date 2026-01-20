@@ -307,42 +307,6 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0"
-                        x:Name="RestartButton"
-                        Content="🔄 Новая тренировка"
-                        Height="40"
-                        Background="#FF4CAF50"
-                        Foreground="White"
-                        FontWeight="Bold"
-                        FontSize="14"
-                        HorizontalAlignment="Left"
-                        Click="RestartButton_Click"
-                        Padding="20,10">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Cursor" Value="Hand"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}"
-                                                CornerRadius="6">
-                                            <ContentPresenter HorizontalAlignment="Center" 
-                                                              VerticalAlignment="Center"
-                                                              Margin="{TemplateBinding Padding}"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#FF66BB6A"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-
                 <Button Grid.Column="2"
                         x:Name="CloseButton"
                         Content="✓ Завершить"

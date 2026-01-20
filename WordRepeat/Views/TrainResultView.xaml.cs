@@ -20,11 +20,6 @@ namespace WordRepeat.Views
             _appData = appData;
         }
 
-        private void RestartButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             _appData.ChangeViewAction(VariableView.Train);
