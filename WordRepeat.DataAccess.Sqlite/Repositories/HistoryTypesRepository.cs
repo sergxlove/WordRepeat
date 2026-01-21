@@ -34,5 +34,27 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
             }
             return result;
         }
+
+        public async Task<int> CountAsync(CancellationToken token)
+        {
+            return await _context.HistoryTypesTable
+                .CountAsync(token);
+        }
+
+        public async Task<List<HistoryTypes>> GetByPaginationAsync(int currentPage, int sizePage,
+            CancellationToken token)
+        {
+            List<HistoryTypesEntity> entities = await _context.HistoryTypesTable
+                .AsNoTracking()
+                .Skip((currentPage - 1) * sizePage)
+                .Take(sizePage)
+                .ToListAsync(token);
+            List<HistoryTypes> result = new();
+            foreach(HistoryTypesEntity h in entities)
+            {
+                result.Add(MapperEntity.FromHistoryTypesEntity(h));
+            }
+            return result;
+        }
     }
 }

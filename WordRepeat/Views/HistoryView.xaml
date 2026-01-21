@@ -172,7 +172,8 @@
                                     Foreground="White"
                                     BorderThickness="0"
                                     FontSize="13"
-                                    Margin="0,0,10,0"/>
+                                    Margin="0,0,10,0"
+                                    Click="Button_Click"/>
 
                         </StackPanel>
                     </Grid>
