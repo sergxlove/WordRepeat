@@ -20,5 +20,14 @@ namespace WordRepeat.Application.Services
         {
             return await _repository.GetAllAsync(token);
         }
+        public async Task<int> CountAsync(CancellationToken token)
+        {
+            return await _repository.CountAsync(token);
+        }
+        public async Task<List<HistoryTypes>> GetByPaginationAsync(int currentPage, int sizePage, 
+            CancellationToken token)
+        {
+            return await _repository.GetByPaginationAsync(currentPage, sizePage, token);
+        }
     }
 }
