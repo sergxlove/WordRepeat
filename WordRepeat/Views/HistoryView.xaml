@@ -204,7 +204,7 @@
                                             Binding="{Binding Id}"
                                             Visibility="Collapsed"/>
 
-                        <DataGridTextColumn Header="Тренировка" 
+                        <DataGridTextColumn Header="Действия" 
                                             Width="*" 
                                             Binding="{Binding Title}">
                             <DataGridTextColumn.HeaderStyle>
@@ -230,9 +230,9 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Дата и время" 
+                        <DataGridTextColumn Header="Дата" 
                                             Width="200" 
-                                            Binding="{Binding Date, StringFormat='dd.MM.yyyy HH:mm'}">
+                                            Binding="{Binding Date}">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="DataGridColumnHeader">
                                     <Setter Property="Background" Value="#FF2A2A2A"/>
@@ -275,7 +275,7 @@
                                             Padding="10,5"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding ResultText}" 
+                                        <TextBlock Text="{Binding Result}" 
                                                    Foreground="White"
                                                    FontWeight="Bold"
                                                    FontSize="13"

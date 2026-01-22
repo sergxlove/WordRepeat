@@ -1,6 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using WordRepeat.Application.Abstractions;
+using WordRepeat.Core.Models;
 using WordRepeat.Models;
 
 namespace WordRepeat.Views
@@ -9,6 +13,7 @@ namespace WordRepeat.Views
     {
         private ServiceProvider _serviceProvider;
         private AppData _appData;
+        private ObservableCollection<HistoryData> _historyAll;
         private int _currentPage = 1;
         private int _sizePage = 50;
         private int _totalHistory = 0;
@@ -17,7 +22,8 @@ namespace WordRepeat.Views
             InitializeComponent();
             _serviceProvider = serviceProvider;
             _appData = appData;
-           
+            _historyAll = new ObservableCollection<HistoryData>();
+            HistoryDataGrid.ItemsSource = _historyAll;
         }
 
         private void FirstPageButton_Click(object sender, RoutedEventArgs e)
@@ -55,9 +61,33 @@ namespace WordRepeat.Views
             LoadData();
         }
 
-        private void LoadData()
+        private async void LoadData()
         {
-
+            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            CancellationToken token = cts.Token;
+            IHistoryTypesService typesService = _serviceProvider
+                .GetRequiredService<IHistoryTypesService>();
+            IHistoryTrainService trainService = _serviceProvider
+                .GetRequiredService<IHistoryTrainService>();
+            IHistoryAddServices addService = _serviceProvider
+                .GetRequiredService<IHistoryAddServices>();
+            List<HistoryTypes> histories = await typesService
+                .GetByPaginationAsync(_currentPage, _sizePage, token);
+            foreach (HistoryTypes historyType in histories)
+            {
+                HistoryData hd = new();
+                if(historyType.NameType == "add")
+                {
+                    HistoryAdd? historyAdd = await addService.GetByIdAsync(historyType.Id, token);
+                    if(historyAdd != null) hd = HistoryData.Create(historyAdd);
+                }
+                else if(historyType.NameType == "train")
+                {
+                    HistoryTrain? historyTrain = await trainService.GetByIdAsync (historyType.Id, token);
+                    if(historyTrain != null) hd = HistoryData.Create(historyTrain);
+                }
+                _historyAll.Add(hd);
+            }
         }
 
         private int GetLastPage()

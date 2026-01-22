@@ -54,5 +54,14 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
                 .SetProperty(a => a.Result, a => a.Result + done)
                 .SetProperty(a => a.Total, a => a.Total + total), token);
         }
+
+        public async Task<HistoryTrain?> GetByIdAsync(Guid id, CancellationToken token)
+        {
+            HistoryTrainEntity? resultEntity = await _context.HistoryTrainTable
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.Id  == id, token);
+            if (resultEntity is null) return null;
+            return MapperEntity.FromHistoryTrainEntity(resultEntity);
+        }
     }
 }
