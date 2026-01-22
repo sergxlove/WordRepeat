@@ -8,5 +8,6 @@ namespace WordRepeat.Application.Abstractions
         Task<List<HistoryAdd>> GetAllAsync(CancellationToken token);
         Task<bool> CheckByDateAsync(DateOnly date, CancellationToken token);
         Task<int> UpdateCountAsync(int count, DateOnly date, CancellationToken token);
+        Task<HistoryAdd?> GetByIdAsync(Guid id, CancellationToken token);
     }
 }

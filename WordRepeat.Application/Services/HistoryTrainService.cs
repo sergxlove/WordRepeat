@@ -29,5 +29,9 @@ namespace WordRepeat.Application.Services
         {
             return await _repository.UpdateCountAsync(done, total, date, token);
         }
+        public async Task<HistoryTrain?> GetByIdAsync(Guid id, CancellationToken token)
+        {
+            return await _repository.GetByIdAsync(id, token);
+        }
     }
 }
