@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WordRepeat.Application.Abstractions;
@@ -73,6 +72,7 @@ namespace WordRepeat.Views
                 .GetRequiredService<IHistoryAddServices>();
             List<HistoryTypes> histories = await typesService
                 .GetByPaginationAsync(_currentPage, _sizePage, token);
+            _historyAll.Clear();
             foreach (HistoryTypes historyType in histories)
             {
                 HistoryData hd = new();
@@ -88,12 +88,19 @@ namespace WordRepeat.Views
                 }
                 _historyAll.Add(hd);
             }
+            TotalHistoryCount.Text = Convert.ToString(await typesService.CountAsync(token));
+            TotalPagesText.Text = GetLastPage().ToString();
         }
 
         private int GetLastPage()
         {
             if (_totalHistory <= _sizePage) return 1;
             return (int)Math.Ceiling((double)_totalHistory / _sizePage);
+        }
+
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadData();
         }
     }
 }

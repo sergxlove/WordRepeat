@@ -61,5 +61,15 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
             if (resultEntity is null) return null;
             return MapperEntity.FromHistoryAddEntity(resultEntity);
         }
+
+        public async Task<int> GetAddedTodayAsync(CancellationToken token)
+        {
+            DateOnly dateToday = DateOnly.FromDateTime(DateTime.Now);
+            int result = await _context.HistoryAddTable
+                .AsNoTracking()
+                .Where(a => a.Date == dateToday)
+                .SumAsync(a => a.CountAdd, token);
+            return result;
+        }
     }
 }
