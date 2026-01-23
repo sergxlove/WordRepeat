@@ -33,5 +33,37 @@ namespace WordRepeat.Application.Services
         {
             return await _repository.GetByIdAsync(id, token);
         }
+        public async Task<int> GetTrainedTodayAsync(CancellationToken token)
+        {
+            return await _repository.GetTrainedTodayAsync(token);
+        }
+        public async Task<int> GetAccuracyByWeekAsync(CancellationToken token)
+        {
+            return await _repository.GetAccuracyByWeekAsync(token);
+        }
+        public async Task<int> GetAccuracyByAllAsync(CancellationToken token)
+        {
+            return await _repository.GetAccuracyByAllAsync(token);
+        }
+        public async Task<int> GetAccuracyByMonthAsync(CancellationToken token)
+        {
+            return await _repository.GetAccuracyByMonthAsync(token);
+        }
+        public async Task<int> CountAsync(CancellationToken token)
+        {
+            return await _repository.CountAsync(token);
+        }
+        public async Task<int> GetCountWrongAsync(CancellationToken token)
+        {
+            return await _repository.GetCountWrongAsync(token);
+        }
+        public async Task<int> GetCountDoneAsync(CancellationToken token)
+        {
+            return await _repository.GetCountDoneAsync(token);
+        }
+        public async Task<int> GetStreakAsync(CancellationToken token)
+        {
+            return await _repository.GetStreakAsync(token);
+        }
     }
 }

@@ -31,5 +31,10 @@ namespace WordRepeat.Application.Services
         {
             return await _repository.GetByIdAsync(id, token);
         }
+
+        public async Task<int> GetAddedTodayAsync(CancellationToken token)
+        {
+            return await _repository.GetAddedTodayAsync(token);
+        }
     }
 }

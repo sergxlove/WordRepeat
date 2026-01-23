@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="528" d:DesignWidth="703"
              HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch">
+             VerticalAlignment="Stretch"
+             Loaded="UserControl_Loaded">
 
     <UserControl.Resources>
         <Style x:Key="StatCardStyle" TargetType="Border">
