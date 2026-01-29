@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using WordRepeat.Abstractions;
 using WordRepeat.Application.Abstractions;
 using WordRepeat.Core.Models;
 using WordRepeat.Enums;
@@ -123,70 +124,17 @@ namespace WordRepeat.Views
 
         private async void CreateQuestionsOptionWT()
         {
-            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            CancellationToken token = cts.Token;
-            IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
-            WordsPair targetPair;
-            Random random = new Random();
-            _questions.Clear();
-            for(int i = 0; i < _appData.Train.CountWord;)
+            try
             {
-                QuestionOption question = new QuestionOption();
-                targetPair = await wordService
-                    .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
-                if (!IsUniqueQuestionOption(targetPair.Word, targetPair.Translate)) continue;
-                i++;
-                question.SelectWord = targetPair.Word;
-                question.CorrectTranslate = targetPair.Translate;
-                question.FieldResponse(targetPair.Translate,
-                    await wordService.GetTranslateByPositionAsync(
-                        random.Next(0, _appData.Stats.CountWords), token),
-                    await wordService.GetTranslateByPositionAsync(
-                        random.Next(0, _appData.Stats.CountWords), token));
-                _questions.Add(question);
-            }
-        }
-
-        private async void CreateQuestionsOptionTW()
-        {
-            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            CancellationToken token = cts.Token;
-            IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
-            WordsPair targetPair;
-            Random random = new Random();
-            _questions.Clear();
-            for (int i = 0; i < _appData.Train.CountWord;)
-            {
-                QuestionOption question = new QuestionOption();
-                targetPair = await wordService
-                    .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
-                if (!IsUniqueQuestionOption(targetPair.Word, targetPair.Translate)) continue;
-                i++;
-                question.SelectWord = targetPair.Translate;
-                question.CorrectTranslate = targetPair.Word;
-                question.FieldResponse(targetPair.Word,
-                    await wordService.GetWordByPositionAsync(
-                        random.Next(0, _appData.Stats.CountWords), token),
-                    await wordService.GetWordByPositionAsync(
-                        random.Next(0, _appData.Stats.CountWords), token));
-                _questions.Add(question);
-            }
-        }
-
-        private async void CreateQuestionsOptionMixed()
-        {
-            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            CancellationToken token = cts.Token;
-            IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
-            WordsPair targetPair;
-            Random random = new Random();
-            bool mode = false;
-            _questions.Clear();
-            for (int i = 0; i < _appData.Train.CountWord;)
-            {
-                QuestionOption question = new QuestionOption();
-                if (mode)
+                using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                CancellationToken token = cts.Token;
+                IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+                WordsPair targetPair;
+                Random random = new Random();
+                _questions.Clear();
+                for(int i = 0; i < _appData.Train.CountWord;)
                 {
+                    QuestionOption question = new QuestionOption();
                     targetPair = await wordService
                         .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                     if (!IsUniqueQuestionOption(targetPair.Word, targetPair.Translate)) continue;
@@ -199,10 +147,29 @@ namespace WordRepeat.Views
                         await wordService.GetTranslateByPositionAsync(
                             random.Next(0, _appData.Stats.CountWords), token));
                     _questions.Add(question);
-                    mode = false;
                 }
-                else
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
+        }
+
+        private async void CreateQuestionsOptionTW()
+        {
+            try
+            {
+                using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                CancellationToken token = cts.Token;
+                IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+                WordsPair targetPair;
+                Random random = new Random();
+                _questions.Clear();
+                for (int i = 0; i < _appData.Train.CountWord;)
                 {
+                    QuestionOption question = new QuestionOption();
                     targetPair = await wordService
                         .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                     if (!IsUniqueQuestionOption(targetPair.Word, targetPair.Translate)) continue;
@@ -215,86 +182,174 @@ namespace WordRepeat.Views
                         await wordService.GetWordByPositionAsync(
                             random.Next(0, _appData.Stats.CountWords), token));
                     _questions.Add(question);
-                    mode = true;
                 }
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
+        }
+
+        private async void CreateQuestionsOptionMixed()
+        {
+            try
+            {
+                using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                CancellationToken token = cts.Token;
+                IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+                WordsPair targetPair;
+                Random random = new Random();
+                bool mode = false;
+                _questions.Clear();
+                for (int i = 0; i < _appData.Train.CountWord;)
+                {
+                    QuestionOption question = new QuestionOption();
+                    if (mode)
+                    {
+                        targetPair = await wordService
+                            .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
+                        if (!IsUniqueQuestionOption(targetPair.Word, targetPair.Translate)) continue;
+                        i++;
+                        question.SelectWord = targetPair.Word;
+                        question.CorrectTranslate = targetPair.Translate;
+                        question.FieldResponse(targetPair.Translate,
+                            await wordService.GetTranslateByPositionAsync(
+                                random.Next(0, _appData.Stats.CountWords), token),
+                            await wordService.GetTranslateByPositionAsync(
+                                random.Next(0, _appData.Stats.CountWords), token));
+                        _questions.Add(question);
+                        mode = false;
+                    }
+                    else
+                    {
+                        targetPair = await wordService
+                            .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
+                        if (!IsUniqueQuestionOption(targetPair.Word, targetPair.Translate)) continue;
+                        i++;
+                        question.SelectWord = targetPair.Translate;
+                        question.CorrectTranslate = targetPair.Word;
+                        question.FieldResponse(targetPair.Word,
+                            await wordService.GetWordByPositionAsync(
+                                random.Next(0, _appData.Stats.CountWords), token),
+                            await wordService.GetWordByPositionAsync(
+                                random.Next(0, _appData.Stats.CountWords), token));
+                        _questions.Add(question);
+                        mode = true;
+                    }
+                }
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
             }
         }
 
         private async void CreateQuestionEnterWT()
         {
-            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            CancellationToken token = cts.Token;
-            IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
-            WordsPair targetPair;
-            Random random = new Random();
-            _questionEnter.Clear();
-            for (int i = 0; i < _appData.Train.CountWord;)
+            try
             {
-                QuestionEnter question = new QuestionEnter();
-                targetPair = await wordService
-                        .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
-                if (!IsUniqueQuestionEnter(targetPair.Word, targetPair.Translate)) continue;
-                i++;
-                question.SelectWord = targetPair.Word;
-                question.CorrectTranslate = targetPair.Translate;
-                _questionEnter.Add(question);
-            }
-        }
-
-        private async void CreateQuestionEnterTW()
-        {
-            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            CancellationToken token = cts.Token;
-            IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
-            WordsPair targetPair;
-            Random random = new Random();
-            _questionEnter.Clear();
-            for (int i = 0; i < _appData.Train.CountWord;)
-            {
-                QuestionEnter question = new QuestionEnter();
-                targetPair = await wordService
-                        .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
-                if(!IsUniqueQuestionEnter(targetPair.Translate, targetPair.Word)) continue;
-                i++;
-                question.SelectWord = targetPair.Translate;
-                question.CorrectTranslate = targetPair.Word;
-                _questionEnter.Add(question);
-            }
-        }
-
-        private async void CreateQuestionEnterMixed()
-        {
-            using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            CancellationToken token = cts.Token;
-            IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
-            WordsPair targetPair;
-            bool mode = false;
-            Random random = new Random();
-            for (int i = 0; i < _appData.Train.CountWord;)
-            {
-                QuestionEnter question = new QuestionEnter();
-                if (mode)
+                using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                CancellationToken token = cts.Token;
+                IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+                WordsPair targetPair;
+                Random random = new Random();
+                _questionEnter.Clear();
+                for (int i = 0; i < _appData.Train.CountWord;)
                 {
+                    QuestionEnter question = new QuestionEnter();
                     targetPair = await wordService
-                        .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
+                            .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
                     if (!IsUniqueQuestionEnter(targetPair.Word, targetPair.Translate)) continue;
                     i++;
                     question.SelectWord = targetPair.Word;
                     question.CorrectTranslate = targetPair.Translate;
                     _questionEnter.Add(question);
-                    mode = false;
                 }
-                else
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
+        }
+
+        private async void CreateQuestionEnterTW()
+        {
+            try
+            {
+                using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                CancellationToken token = cts.Token;
+                IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+                WordsPair targetPair;
+                Random random = new Random();
+                _questionEnter.Clear();
+                for (int i = 0; i < _appData.Train.CountWord;)
                 {
+                    QuestionEnter question = new QuestionEnter();
                     targetPair = await wordService
-                        .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
-                    if (!IsUniqueQuestionEnter(targetPair.Translate, targetPair.Word)) continue;
+                            .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
+                    if(!IsUniqueQuestionEnter(targetPair.Translate, targetPair.Word)) continue;
                     i++;
                     question.SelectWord = targetPair.Translate;
                     question.CorrectTranslate = targetPair.Word;
                     _questionEnter.Add(question);
-                    mode = true;
                 }
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
+        }
+
+        private async void CreateQuestionEnterMixed()
+        {
+            try
+            {
+                using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                CancellationToken token = cts.Token;
+                IWordPairService wordService = _serviceProvider.GetRequiredService<IWordPairService>();
+                WordsPair targetPair;
+                bool mode = false;
+                Random random = new Random();
+                for (int i = 0; i < _appData.Train.CountWord;)
+                {
+                    QuestionEnter question = new QuestionEnter();
+                    if (mode)
+                    {
+                        targetPair = await wordService
+                            .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
+                        if (!IsUniqueQuestionEnter(targetPair.Word, targetPair.Translate)) continue;
+                        i++;
+                        question.SelectWord = targetPair.Word;
+                        question.CorrectTranslate = targetPair.Translate;
+                        _questionEnter.Add(question);
+                        mode = false;
+                    }
+                    else
+                    {
+                        targetPair = await wordService
+                            .GetByPositionAsync(random.Next(0, _appData.Stats.CountWords), token);
+                        if (!IsUniqueQuestionEnter(targetPair.Translate, targetPair.Word)) continue;
+                        i++;
+                        question.SelectWord = targetPair.Translate;
+                        question.CorrectTranslate = targetPair.Word;
+                        _questionEnter.Add(question);
+                        mode = true;
+                    }
+                }
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
             }
         }
 
@@ -348,131 +403,167 @@ namespace WordRepeat.Views
 
         private void CheckButtonEnter_Click(object sender, RoutedEventArgs e)
         {
-            if(_modeCheckButton)
+            try
             {
-                if (_currentWord == _appData.Train.CountWord)
+                if(_modeCheckButton)
                 {
-                    _timer.Stop();
-                    _appData.TrainResult.CountDone = _wordDone;
-                    if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
-                    _appData.TrainResult.Streak = _bestStreakWord;
-                    _appData.TrainResult.TrainingTimeSeconds = _seconds;
-                    if (_appData.Train.IsTime) TimerText.Text = "00:00";
-                    _appData.ChangeViewAction(VariableView.TrainResult);
-                    return;
-                }
-                CurrentWordText.Text = $"{_currentWord + 1} из {_appData.Train.CountWord}";
-                CorrectCountText.Text = $"{_wordDone}";
-                QuestionText.Text = _questionEnter[_currentWord].SelectWord;
-                _modeCheckButton = false;
-                CheckInputButton.Content = "Проверить";
-                UpdateProgressBar();
-                if (CorrectAnswerText.Visibility == Visibility.Visible)
-                    CorrectAnswerText.Visibility = Visibility.Collapsed;
-                if (PreviousResultText.Visibility == Visibility.Visible)
-                {
-                    PreviousResultText.Visibility = Visibility.Collapsed;
-                    PreviousResultIcon.Visibility = Visibility.Collapsed;
-                }
-                _responseEnter = string.Empty;
-                AnswerTextBox.Text = string.Empty;
-            }
-            else
-            {
-                _responseEnter = AnswerTextBox.Text;
-                if (string.IsNullOrEmpty(_responseEnter)) return;
-                if (_questionEnter[_currentWord].IsDone(_responseEnter))
-                {
-                    CorrectAnswerText.Visibility = Visibility.Visible;
-                    _wordDone++;
-                    _currentStreakWord++;
+                    if (_currentWord == _appData.Train.CountWord)
+                    {
+                        _timer.Stop();
+                        _appData.TrainResult.CountDone = _wordDone;
+                        if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
+                        _appData.TrainResult.Streak = _bestStreakWord;
+                        _appData.TrainResult.TrainingTimeSeconds = _seconds;
+                        if (_appData.Train.IsTime) TimerText.Text = "00:00";
+                        _appData.ChangeViewAction(VariableView.TrainResult);
+                        return;
+                    }
+                    CurrentWordText.Text = $"{_currentWord + 1} из {_appData.Train.CountWord}";
+                    CorrectCountText.Text = $"{_wordDone}";
+                    QuestionText.Text = _questionEnter[_currentWord].SelectWord;
+                    _modeCheckButton = false;
+                    CheckInputButton.Content = "Проверить";
+                    UpdateProgressBar();
+                    if (CorrectAnswerText.Visibility == Visibility.Visible)
+                        CorrectAnswerText.Visibility = Visibility.Collapsed;
+                    if (PreviousResultText.Visibility == Visibility.Visible)
+                    {
+                        PreviousResultText.Visibility = Visibility.Collapsed;
+                        PreviousResultIcon.Visibility = Visibility.Collapsed;
+                    }
+                    _responseEnter = string.Empty;
+                    AnswerTextBox.Text = string.Empty;
                 }
                 else
                 {
-                    if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
-                    _currentStreakWord = 0;
-                    PreviousResultIcon.Visibility = Visibility.Visible;
-                    PreviousResultText.Visibility = Visibility.Visible;
+                    _responseEnter = AnswerTextBox.Text;
+                    if (string.IsNullOrEmpty(_responseEnter)) return;
+                    if (_questionEnter[_currentWord].IsDone(_responseEnter))
+                    {
+                        CorrectAnswerText.Visibility = Visibility.Visible;
+                        _wordDone++;
+                        _currentStreakWord++;
+                    }
+                    else
+                    {
+                        if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
+                        _currentStreakWord = 0;
+                        PreviousResultIcon.Visibility = Visibility.Visible;
+                        PreviousResultText.Visibility = Visibility.Visible;
+                    }
+                    _currentWord++;
+                    _modeCheckButton = true;
+                    CheckInputButton.Content = "Следующий";
                 }
-                _currentWord++;
-                _modeCheckButton = true;
-                CheckInputButton.Content = "Следующий";
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
             }
         }
 
         public void CheckButtonOption_Click(object sender, RoutedEventArgs e)
         {
-            if(_modeCheckButton)
+            try
             {
-                if(_currentWord == _appData.Train.CountWord)
+                if(_modeCheckButton)
                 {
-                    _timer.Stop();
-                    _appData.TrainResult.CountDone = _wordDone;
-                    if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
-                    _appData.TrainResult.Streak = _bestStreakWord;
-                    _appData.TrainResult.TrainingTimeSeconds = _seconds;
-                    if (_appData.Train.IsTime) TimerText.Text = "00:00";
-                    _appData.ChangeViewAction(VariableView.TrainResult);
-                    return;
-                }
-                CurrentWordText.Text = $"{_currentWord + 1} из {_appData.Train.CountWord}";
-                CorrectCountText.Text = $"{_wordDone}";
-                SetQuestionResponse();
-                QuestionText.Text = _questions[_currentWord].SelectWord;
-                _modeCheckButton = false;
-                CheckButton.Content = "Проверить";
-                ResetButtons();
-                UpdateProgressBar();
-                if (CorrectAnswerText.Visibility == Visibility.Visible)
-                    CorrectAnswerText.Visibility = Visibility.Collapsed;
-                if (PreviousResultText.Visibility == Visibility.Visible)
-                {
-                    PreviousResultText.Visibility = Visibility.Collapsed;
-                    PreviousResultIcon.Visibility = Visibility.Collapsed;
-                }
-                _variableResponce = 0;
-            }
-            else
-            {
-                if (_variableResponce == 0) return;
-                if (_questions[_currentWord].IsDone(_variableResponce))
-                {
-                    CorrectAnswerText.Visibility = Visibility.Visible;
-                    _wordDone++;
-                    _currentStreakWord++;
+                    if(_currentWord == _appData.Train.CountWord)
+                    {
+                        _timer.Stop();
+                        _appData.TrainResult.CountDone = _wordDone;
+                        if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
+                        _appData.TrainResult.Streak = _bestStreakWord;
+                        _appData.TrainResult.TrainingTimeSeconds = _seconds;
+                        if (_appData.Train.IsTime) TimerText.Text = "00:00";
+                        _appData.ChangeViewAction(VariableView.TrainResult);
+                        return;
+                    }
+                    CurrentWordText.Text = $"{_currentWord + 1} из {_appData.Train.CountWord}";
+                    CorrectCountText.Text = $"{_wordDone}";
+                    SetQuestionResponse();
+                    QuestionText.Text = _questions[_currentWord].SelectWord;
+                    _modeCheckButton = false;
+                    CheckButton.Content = "Проверить";
+                    ResetButtons();
+                    UpdateProgressBar();
+                    if (CorrectAnswerText.Visibility == Visibility.Visible)
+                        CorrectAnswerText.Visibility = Visibility.Collapsed;
+                    if (PreviousResultText.Visibility == Visibility.Visible)
+                    {
+                        PreviousResultText.Visibility = Visibility.Collapsed;
+                        PreviousResultIcon.Visibility = Visibility.Collapsed;
+                    }
+                    _variableResponce = 0;
                 }
                 else
                 {
-                    if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
-                    _currentStreakWord = 0;
-                    PreviousResultIcon.Visibility = Visibility.Visible;
-                    PreviousResultText.Visibility = Visibility.Visible;
+                    if (_variableResponce == 0) return;
+                    if (_questions[_currentWord].IsDone(_variableResponce))
+                    {
+                        CorrectAnswerText.Visibility = Visibility.Visible;
+                        _wordDone++;
+                        _currentStreakWord++;
+                    }
+                    else
+                    {
+                        if (_bestStreakWord < _currentStreakWord) _bestStreakWord = _currentStreakWord;
+                        _currentStreakWord = 0;
+                        PreviousResultIcon.Visibility = Visibility.Visible;
+                        PreviousResultText.Visibility = Visibility.Visible;
+                    }
+                    _currentWord++;
+                    _modeCheckButton = true;
+                    CheckButton.Content = "Следующий";
                 }
-                _currentWord++;
-                _modeCheckButton = true;
-                CheckButton.Content = "Следующий";
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
             }
         }
 
         private void AnswerTextBox_TextChanged(object sender, RoutedEventArgs e)
         {
-            if(AnswerTextBox.Text.Length > 0)
+            try
             {
-                CheckInputButton.IsEnabled = true;
-                CheckInputButton.Visibility = Visibility.Visible;
+                if(AnswerTextBox.Text.Length > 0)
+                {
+                    CheckInputButton.IsEnabled = true;
+                    CheckInputButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    CheckInputButton.IsEnabled = true;
+                    CheckInputButton.Visibility = Visibility.Collapsed;
+                }
             }
-            else
+            catch
             {
-                CheckInputButton.IsEnabled = true;
-                CheckInputButton.Visibility = Visibility.Collapsed;
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
             }
         }
 
         private void EndButton_Click(object sender, RoutedEventArgs e)
         {
-            _timer.Stop();
-            if (_appData.Train.IsTime) TimerText.Text = "00:00";
-            _appData.ChangeViewAction(VariableView.Train);
+            try
+            {
+                _timer.Stop();
+                if (_appData.Train.IsTime) TimerText.Text = "00:00";
+                _appData.ChangeViewAction(VariableView.Train);
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
 
         private void SetQuestionResponse()
@@ -484,18 +575,27 @@ namespace WordRepeat.Views
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadData();
-            if(_appData.Train.Type == TypeQuestion.Select)
+            try
             {
-                SetQuestionResponse();
-                QuestionText.Text = _questions[_currentWord].SelectWord;
+                LoadData();
+                if(_appData.Train.Type == TypeQuestion.Select)
+                {
+                    SetQuestionResponse();
+                    QuestionText.Text = _questions[_currentWord].SelectWord;
+                }
+                else
+                {
+                    QuestionText.Text = _questionEnter[_currentWord].SelectWord;
+                }
+                _modeCheckButton = false;
+                TotalCountText.Text = _appData.Train.CountWord.ToString();
             }
-            else
+            catch
             {
-                QuestionText.Text = _questionEnter[_currentWord].SelectWord;
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
             }
-            _modeCheckButton = false;
-            TotalCountText.Text = _appData.Train.CountWord.ToString();
         }
 
         private void ResetButtons()
@@ -513,10 +613,19 @@ namespace WordRepeat.Views
 
         private void UpdateProgressBar()
         {
-            double width = ProgressBarSpace.ActualWidth;
-            double widthProgres = width / _appData.Train.CountWord * _currentWord + 1;
-            ProgressBarFill.Width = widthProgres;
-            ProgressText.Text = (100 / _appData.Train.CountWord * _currentWord).ToString() + "%";
+            try
+            { 
+                double width = ProgressBarSpace.ActualWidth;
+                double widthProgres = width / _appData.Train.CountWord * _currentWord + 1;
+                ProgressBarFill.Width = widthProgres;
+                ProgressText.Text = (100 / _appData.Train.CountWord * _currentWord).ToString() + "%";
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
 
         private class QuestionEnter

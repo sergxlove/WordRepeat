@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
+using WordRepeat.Abstractions;
 using WordRepeat.Enums;
 using WordRepeat.Models;
 
@@ -19,21 +20,30 @@ namespace WordRepeat.Views
         
         private void StartTrainingButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ModeWordRadio.IsChecked == true)
-                _appData.Train.Mode = ModeTrain.WordToTranslate;
-            else if (ModeTranslationRadio.IsChecked == true)
-                _appData.Train.Mode = ModeTrain.TranslateToWord;
-            else if (ModeMixedRadio.IsChecked == true)
-                _appData.Train.Mode = ModeTrain.Mixed;
-            _appData.Train.CountWord = Convert.ToInt32(SelectedCountText.Text);
-            if (TypeInputRadio.IsChecked == true)
-                _appData.Train.Type = TypeQuestion.Enter;
-            else if (TypeOptionsRadio.IsChecked == true)
-                _appData.Train.Type = TypeQuestion.Select;
-            if (ShowTimerCheckBox.IsChecked == true)
-                _appData.Train.IsTime = true;
+            try
+            {
+                if (ModeWordRadio.IsChecked == true)
+                    _appData.Train.Mode = ModeTrain.WordToTranslate;
+                else if (ModeTranslationRadio.IsChecked == true)
+                    _appData.Train.Mode = ModeTrain.TranslateToWord;
+                else if (ModeMixedRadio.IsChecked == true)
+                    _appData.Train.Mode = ModeTrain.Mixed;
+                _appData.Train.CountWord = Convert.ToInt32(SelectedCountText.Text);
+                if (TypeInputRadio.IsChecked == true)
+                    _appData.Train.Type = TypeQuestion.Enter;
+                else if (TypeOptionsRadio.IsChecked == true)
+                    _appData.Train.Type = TypeQuestion.Select;
+                if (ShowTimerCheckBox.IsChecked == true)
+                    _appData.Train.IsTime = true;
 
-            _appData.ChangeViewAction(VariableView.TrainAction);
+                _appData.ChangeViewAction(VariableView.TrainAction);
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
 
         private void WordsCountSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
