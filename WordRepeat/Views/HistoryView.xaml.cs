@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using WordRepeat.Abstractions;
 using WordRepeat.Application.Abstractions;
 using WordRepeat.Core.Models;
 using WordRepeat.Models;
@@ -27,37 +28,82 @@ namespace WordRepeat.Views
 
         private void FirstPageButton_Click(object sender, RoutedEventArgs e)
         {
-            _currentPage = 1;
-            LoadData();
+            try
+            {
+                _currentPage = 1;
+                LoadData();
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
 
         private void PrevPageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentPage != 1)
+            try
             {
-                _currentPage -= 1;
+                if (_currentPage != 1)
+                {
+                    _currentPage -= 1;
+                }
+                LoadData();
             }
-            LoadData();
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
 
         private void NextPageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentPage < GetLastPage())
+            try
             {
-                _currentPage += 1;
+                if (_currentPage < GetLastPage())
+                {
+                    _currentPage += 1;
+                }
+                LoadData();
             }
-            LoadData();
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
 
         private void LastPageButton_Click(object sender, RoutedEventArgs e)
         {
-            _currentPage = GetLastPage();
-            LoadData();
+            try
+            {
+                _currentPage = GetLastPage();
+                LoadData();
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            LoadData();
+            try
+            {
+                LoadData();
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
 
         private async void LoadData()
@@ -94,13 +140,32 @@ namespace WordRepeat.Views
 
         private int GetLastPage()
         {
-            if (_totalHistory <= _sizePage) return 1;
-            return (int)Math.Ceiling((double)_totalHistory / _sizePage);
+            try
+            {
+                if (_totalHistory <= _sizePage) return 1;
+                return (int)Math.Ceiling((double)_totalHistory / _sizePage);
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+                return 0;
+            }
         }
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadData();
+            try
+            {
+                LoadData();
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
     }
 }

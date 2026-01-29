@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows.Controls;
+using WordRepeat.Abstractions;
 using WordRepeat.Application.Abstractions;
 using WordRepeat.Models;
 
@@ -39,7 +40,16 @@ namespace WordRepeat.Views
 
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            LoadData();
+            try
+            {
+                LoadData();
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
     }
 }

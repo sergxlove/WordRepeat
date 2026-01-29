@@ -89,8 +89,17 @@ namespace WordRepeat.Views
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            WordsCountText.Text = _appData.Stats.CountWords.ToString();
-            DataSizeText.Text = GetLengthDb().ToString() + " КБ";
+            try
+            {
+                WordsCountText.Text = _appData.Stats.CountWords.ToString();
+                DataSizeText.Text = GetLengthDb().ToString() + " КБ";
+            }
+            catch
+            {
+                INotificationService notification = _serviceProvider
+                    .GetRequiredService<INotificationService>();
+                notification.ShowError("Произошла ошибка");
+            }
         }
 
         private long GetLengthDb()
