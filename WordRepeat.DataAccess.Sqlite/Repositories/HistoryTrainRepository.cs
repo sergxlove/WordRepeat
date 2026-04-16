@@ -88,6 +88,7 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
                 .AsNoTracking()
                 .Where(a => a.Date >= weekStart && a.Date <= weekEnd)
                 .SumAsync(a => a.Total, token);
+            if (total == 0) return 0;
             double accuracy = result / total * 100;
             return Convert.ToInt32(accuracy);
         }
@@ -100,6 +101,7 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
             int total = await _context.HistoryTrainTable
                 .AsNoTracking()
                 .SumAsync(a => a.Total, token);
+            if (total == 0) return 0;
             double accuracy = result / total * 100;
             return Convert.ToInt32(accuracy);
         }
@@ -117,6 +119,7 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
                 .AsNoTracking()
                 .Where(a => a.Date >= monthStart && a.Date <= monthEnd)
                 .SumAsync(a => a.Total, token);
+            if (total == 0) return 0;
             double accuracy = result / total * 100;
             return Convert.ToInt32(accuracy);
         }
