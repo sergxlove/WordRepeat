@@ -13,6 +13,7 @@ namespace WordRepeat.DataAccess.Sqlite
         public DbSet<HistoryAddEntity> HistoryAddTable { get; set; }
         public DbSet<HistoryTrainEntity> HistoryTrainTable { get; set; }
         public DbSet<HistoryTypesEntity> HistoryTypesTable { get; set; }
+        public DbSet<NotesEntity> NotesTable { get; set; }
         public DbSet<WordsPairEntity> WordPairsTable { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -24,6 +25,7 @@ namespace WordRepeat.DataAccess.Sqlite
             modelBuilder.ApplyConfiguration(new HistoryAddConfiguration());
             modelBuilder.ApplyConfiguration(new HistoryTrainConfiguration());
             modelBuilder.ApplyConfiguration(new HistoryTypesConfiguration());
+            modelBuilder.ApplyConfiguration(new NotesConfiguration());
             modelBuilder.ApplyConfiguration(new WordsPairConfiguration());
             base.OnModelCreating(modelBuilder);
         }
