@@ -45,10 +45,12 @@ namespace WordRepeat
             _serviceCollection.AddScoped<IHistoryAddRepository, HistoryAddRepository>();
             _serviceCollection.AddScoped<IHistoryTrainRepository, HistoryTrainRepository>();
             _serviceCollection.AddScoped<IHistoryTypesRepository, HistoryTypesRepository>();
+            _serviceCollection.AddScoped<INotesRepository, NotesRepository>();
             _serviceCollection.AddScoped<IWordsPairRepository, WordsPairRepository>();
             _serviceCollection.AddScoped<IHistoryAddServices, HistoryAddServices>();
             _serviceCollection.AddScoped<IHistoryTrainService, HistoryTrainService>();
             _serviceCollection.AddScoped<IHistoryTypesService,  HistoryTypesService>();
+            _serviceCollection.AddScoped<INotesService, NotesService>();
             _serviceCollection.AddScoped<IWordPairService, WordPairService>();
             _serviceCollection.AddScoped<INotificationService>(pr =>
                 new NotificationService(NotificationContainer));

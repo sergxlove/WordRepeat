@@ -41,6 +41,18 @@ namespace WordRepeat.DataAccess.Sqlite.Infrastructures
             return historyTypesEntity;
         }
 
+        public static NotesEntity ToNotesEntity(Notes notesTable)
+        {
+            NotesEntity notesEntity = new NotesEntity()
+            {
+                Id = notesTable.Id,
+                Title = notesTable.Title,
+                Content = notesTable.Content,
+                DateUpdate = notesTable.DateUpdate
+            };
+            return notesEntity;
+        }
+
         public static WordsPairEntity ToWordsPairEntity(WordsPair wordsPair)
         {
             WordsPairEntity wordsPairEntity = new WordsPairEntity()
@@ -76,6 +88,14 @@ namespace WordRepeat.DataAccess.Sqlite.Infrastructures
             if(!string.IsNullOrEmpty(historyTypes.Error))
                 throw new Exception(historyTypes.Error);
             return historyTypes.Value;
+        }
+
+        public static Notes FromNotesEntity(NotesEntity n)
+        {
+            ResultCreateModel<Notes> notesTable = Notes.Create(n.Id, n.Title, n.Content, n.DateUpdate);
+            if(!string.IsNullOrEmpty(notesTable.Error))
+                throw new Exception(notesTable.Error);
+            return notesTable.Value;
         }
 
         public static WordsPair FromWordsPairEntity(WordsPairEntity w)
