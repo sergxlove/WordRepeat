@@ -99,6 +99,11 @@
                         Style="{StaticResource NavButtonStyle}"
                         Click="TrainButtonClick"/>
 
+                <Button x:Name="NotesButton" 
+                        Content="📚 Заметки" 
+                        Style="{StaticResource NavButtonStyle}"
+                        Click="NotesButtonClick"/>
+                
                 <Button x:Name="HistoryButton" 
                         Content="📅 История" 
                         Style="{StaticResource NavButtonStyle}"

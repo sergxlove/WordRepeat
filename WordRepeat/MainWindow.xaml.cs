@@ -25,6 +25,7 @@ namespace WordRepeat
         private SettingView _settingView;
         private TrainActionView _trainActionView;
         private TrainResultView _trainResultView;
+        private NotesView _notesView;
         private VariableView _currentView = VariableView.Main;
         private ServiceCollection _serviceCollection;
         private ServiceProvider _serviceProvider;
@@ -63,6 +64,7 @@ namespace WordRepeat
             _settingView = new SettingView(_serviceProvider, _appData);
             _trainActionView = new TrainActionView(_serviceProvider, _appData);
             _trainResultView = new TrainResultView(_serviceProvider, _appData);
+            _notesView = new NotesView(_serviceProvider, _appData);
             CreateAppData();
             ShowViews();
             SizeChanged += MainWindow_SizeChanged;
@@ -100,6 +102,14 @@ namespace WordRepeat
             ShowViews();
         }
 
+        private void NotesButtonClick(object sender, RoutedEventArgs e)
+        {
+            DisableView();
+            _currentView = VariableView.Notes;
+            NotesButton.Background = new SolidColorBrush(Color.FromRgb(30, 30, 60));
+            ShowViews();
+        }
+
         private void HistoryButtonClick(object sender, RoutedEventArgs e)
         {
             DisableView();
@@ -128,6 +138,9 @@ namespace WordRepeat
                     break;
                 case VariableView.Train:
                     TrainButton.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+                    break;
+                case VariableView.Notes:
+                    NotesButton.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
                     break;
                 case VariableView.History:
                     HistoryButton.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
@@ -164,6 +177,9 @@ namespace WordRepeat
                     break;
                 case VariableView.TrainResult:
                     MainContentControl.Content = _trainResultView;
+                    break;
+                case VariableView.Notes:
+                    MainContentControl.Content = _notesView;
                     break;
                 default:
                     break;
