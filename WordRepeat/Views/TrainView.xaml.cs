@@ -22,6 +22,13 @@ namespace WordRepeat.Views
         {
             try
             {
+                if(_appData.Stats.CountWords < 100)
+                {
+                    INotificationService notification = _serviceProvider
+                        .GetRequiredService<INotificationService>();
+                    notification.ShowError("Для тренировки необходимо иметь 100 слов в базе");
+                    return;
+                }
                 if (ModeWordRadio.IsChecked == true)
                     _appData.Train.Mode = ModeTrain.WordToTranslate;
                 else if (ModeTranslationRadio.IsChecked == true)

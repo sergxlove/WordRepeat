@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 using WordRepeat.Abstractions;
 
 namespace WordRepeat.Services
@@ -97,7 +96,6 @@ namespace WordRepeat.Services
             if (_notificationContainer == null)
                 return;
 
-            // Создаем контрол уведомления
             Border border = new Border
             {
                 Margin = new Thickness(10),
@@ -117,15 +115,12 @@ namespace WordRepeat.Services
 
             Grid mainGrid = new Grid();
             mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            mainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(3) }); // Полоска прогресса
-
-            // Верхняя часть с контентом
+            mainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(3) }); 
             StackPanel contentPanel = new StackPanel
             {
                 Margin = new Thickness(15)
             };
 
-            // Заголовок
             if (!string.IsNullOrEmpty(notification.Title))
             {
                 var titleText = new TextBlock
@@ -139,7 +134,6 @@ namespace WordRepeat.Services
                 contentPanel.Children.Add(titleText);
             }
 
-            // Сообщение
             var messageText = new TextBlock
             {
                 Text = notification.Message,
@@ -152,7 +146,6 @@ namespace WordRepeat.Services
             Grid.SetRow(contentPanel, 0);
             mainGrid.Children.Add(contentPanel);
 
-            // Полоска обратного отсчета
             Border progressBorder = new Border
             {
                 Height = 3,
@@ -177,7 +170,6 @@ namespace WordRepeat.Services
 
             border.Child = mainGrid;
 
-            // Кнопка закрытия
             var closeButton = new Button
             {
                 Content = "×",
@@ -203,10 +195,8 @@ namespace WordRepeat.Services
             outerGrid.Children.Add(border);
             outerGrid.Children.Add(closeButton);
 
-            // Добавляем в контейнер
             _notificationContainer.Children.Add(outerGrid);
 
-            // Анимация появления
             var fadeIn = new DoubleAnimation
             {
                 From = 0,
@@ -216,32 +206,27 @@ namespace WordRepeat.Services
 
             border.BeginAnimation(UIElement.OpacityProperty, fadeIn);
 
-            // Анимация полоски прогресса
             DoubleAnimation progressAnimation = new DoubleAnimation
             {
-                From = border.ActualWidth > 0 ? border.ActualWidth : 400, // Если ширина еще не определена, используем примерную
+                From = border.ActualWidth > 0 ? border.ActualWidth : 400, 
                 To = 0,
                 Duration = TimeSpan.FromMilliseconds(notification.Duration),
                 FillBehavior = FillBehavior.HoldEnd
             };
 
-            // Подписываемся на событие загрузки, чтобы получить реальную ширину
             border.Loaded += (s, e) =>
             {
                 double actualWidth = border.ActualWidth;
                 if (actualWidth > 0)
                 {
-                    // Пересоздаем анимацию с правильной шириной
                     progressAnimation.From = actualWidth;
                     progressBar.Width = actualWidth;
                     progressBar.BeginAnimation(Rectangle.WidthProperty, progressAnimation);
                 }
             };
 
-            // Старт анимации
             progressBar.BeginAnimation(Rectangle.WidthProperty, progressAnimation);
 
-            // Автоматическое закрытие
             Task.Delay(notification.Duration).ContinueWith(_ =>
             {
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -253,7 +238,6 @@ namespace WordRepeat.Services
 
         private void RemoveNotification(Border border, Rectangle progressBar)
         {
-            // Останавливаем анимацию прогресса
             if (progressBar != null)
             {
                 progressBar.BeginAnimation(Rectangle.WidthProperty, null);

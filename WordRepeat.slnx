@@ -2,5 +2,7 @@
   <Project Path="WordRepeat.Application/WordRepeat.Application.csproj" />
   <Project Path="WordRepeat.Core/WordRepeat.Core.csproj" />
   <Project Path="WordRepeat.DataAccess.Sqlite/WordRepeat.DataAccess.Sqlite.csproj" />
+  <Project Path="WordRepeat.Tests/WordRepeat.Tests.csproj" Id="74a7e91a-aae5-469f-b18d-4ee1a2d61d80" />
+  <Project Path="WordRepeat.Web/WordRepeat.Web.csproj" Id="68096e25-d53f-44cd-af98-84a0b386c280" />
   <Project Path="WordRepeat/WordRepeat.csproj" />
 </Solution>
