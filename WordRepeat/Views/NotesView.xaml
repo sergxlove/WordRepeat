@@ -246,14 +246,6 @@
                                 </Style>
                             </TextBox.Style>
                         </TextBox>
-
-                        <Button Content="🗘 Обновить" 
-                                Width="100" Height="30"
-                                Margin="20,0,0,0"
-                                Background="#FF2196F3"
-                                Foreground="White"
-                                BorderThickness="0"
-                                Click="RefreshButton_Click"/>
                     </StackPanel>
                 </Border>
 

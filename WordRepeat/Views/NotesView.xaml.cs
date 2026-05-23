@@ -22,7 +22,7 @@ namespace WordRepeat.Views
 
         private enum ModalMode { Create, Edit, View }
         private ModalMode _currentMode;
-        private Notes _currentNote;
+        private Notes? _currentNote;
 
         public NotesView(ServiceProvider serviceProvider, AppData appData)
         {
@@ -32,8 +32,6 @@ namespace WordRepeat.Views
             _cancellationTokenSource = new CancellationTokenSource();
             _notesService = _serviceProvider.GetRequiredService<INotesService>();
             _notificationService = _serviceProvider.GetRequiredService<INotificationService>();
-
-            // Привязываем DataGrid к ObservableCollection
             NotesDataGrid.ItemsSource = _displayedNotes;
         }
 
@@ -57,7 +55,7 @@ namespace WordRepeat.Views
             }
             catch (OperationCanceledException)
             {
-                // Операция отменена
+
             }
             catch (Exception)
             {
@@ -78,7 +76,6 @@ namespace WordRepeat.Views
                                         (n.Content?.ToLower().Contains(searchText) ?? false));
             }
 
-            // Обновляем отображаемую коллекцию
             _displayedNotes.Clear();
             foreach (var note in query)
             {
@@ -86,7 +83,6 @@ namespace WordRepeat.Views
             }
         }
 
-        // Двойной клик по заметке для просмотра
         private void NotesDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var selectedNote = NotesDataGrid.SelectedItem as Notes;
@@ -133,7 +129,6 @@ namespace WordRepeat.Views
             TitleTextBox.IsReadOnly = true;
             ContentTextBox.IsReadOnly = true;
 
-            // Показываем панель с датой и устанавливаем значение
             DateUpdatePanel.Visibility = Visibility.Visible;
             DateUpdateText.Text = note.DateUpdate.ToString("dd.MM.yyyy HH:mm:ss");
 
@@ -157,7 +152,6 @@ namespace WordRepeat.Views
                 TitleTextBox.IsReadOnly = false;
                 ContentTextBox.IsReadOnly = false;
 
-                // Скрываем панель с датой при редактировании
                 DateUpdatePanel.Visibility = Visibility.Collapsed;
 
                 SaveNoteButton.Visibility = Visibility.Visible;
@@ -175,7 +169,6 @@ namespace WordRepeat.Views
                 {
                     await _notesService.DeleteAsync(_currentNote.Id, _cancellationTokenSource.Token);
 
-                    // Удаляем из коллекций
                     var noteToRemove = _allNotes.FirstOrDefault(n => n.Id == _currentNote.Id);
                     if (noteToRemove != null)
                     {
@@ -184,7 +177,7 @@ namespace WordRepeat.Views
 
                     _notificationService.ShowSuccess("Заметка успешно удалена");
                     CloseModal();
-                    ApplyFilterAndSearch(); // Обновляем отображение без перезагрузки
+                    ApplyFilterAndSearch(); 
                 }
                 catch (Exception)
                 {
@@ -207,15 +200,12 @@ namespace WordRepeat.Views
                 {
                     bool hasChanges = false;
 
-                    // Обновляем заголовок
                     if (_currentNote.Title != TitleTextBox.Text.Trim())
                     {
                         await _notesService.UpdateTitleAsync(_currentNote.Id, TitleTextBox.Text.Trim(), _cancellationTokenSource.Token);
                         _currentNote.Title = TitleTextBox.Text.Trim();
                         hasChanges = true;
                     }
-
-                    // Обновляем содержание
                     if (_currentNote.Content != ContentTextBox.Text.Trim())
                     {
                         await _notesService.UpdateContentAsync(_currentNote.Id, ContentTextBox.Text.Trim(), _cancellationTokenSource.Token);
@@ -225,10 +215,7 @@ namespace WordRepeat.Views
 
                     if (hasChanges)
                     {
-                        // Обновляем дату
                         _currentNote.DateUpdate = DateTime.UtcNow;
-
-                        // Обновляем заметку в коллекции _allNotes
                         var existingNote = _allNotes.FirstOrDefault(n => n.Id == _currentNote.Id);
                         if (existingNote != null)
                         {
@@ -237,7 +224,6 @@ namespace WordRepeat.Views
                             existingNote.DateUpdate = _currentNote.DateUpdate;
                         }
 
-                        // Пересортировываем коллекцию
                         var sortedNotes = _allNotes.OrderByDescending(n => n.DateUpdate).ToList();
                         _allNotes.Clear();
                         foreach (var note in sortedNotes)
@@ -247,7 +233,7 @@ namespace WordRepeat.Views
 
                         _notificationService.ShowSuccess("Заметка успешно обновлена");
                         CloseModal();
-                        ApplyFilterAndSearch(); // Обновляем отображение
+                        ApplyFilterAndSearch(); 
                     }
                     else
                     {
@@ -264,10 +250,8 @@ namespace WordRepeat.Views
                         var newNote = createResult.Value;
                         await _notesService.AddAsync(newNote, _cancellationTokenSource.Token);
 
-                        // Добавляем в коллекцию
                         _allNotes.Add(newNote);
 
-                        // Пересортировываем
                         var sortedNotes = _allNotes.OrderByDescending(n => n.DateUpdate).ToList();
                         _allNotes.Clear();
                         foreach (var note in sortedNotes)
@@ -277,7 +261,7 @@ namespace WordRepeat.Views
 
                         _notificationService.ShowSuccess("Заметка успешно создана");
                         CloseModal();
-                        ApplyFilterAndSearch(); // Обновляем отображение
+                        ApplyFilterAndSearch(); 
                     }
                     else
                     {
@@ -302,14 +286,6 @@ namespace WordRepeat.Views
         {
             ModalOverlay.Visibility = Visibility.Collapsed;
             _currentNote = null;
-        }
-
-        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource = new CancellationTokenSource();
-            await LoadNotesAsync();
-            _notificationService.ShowInfo("Список заметок обновлен");
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
