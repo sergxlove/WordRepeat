@@ -35,7 +35,8 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
             return await _context.NotesTable
                 .Where(a => a.Id == id)
                 .ExecuteUpdateAsync(a => a
-                .SetProperty(a => a.Title, title), token);
+                .SetProperty(a => a.Title, title)
+                .SetProperty(a => a.DateUpdate, DateTime.UtcNow), token);
         }
 
         public async Task<int> UpdateContentAsync(Guid id, string content, CancellationToken token)
@@ -43,7 +44,8 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
             return await _context.NotesTable
                 .Where(a => a.Id == id)
                 .ExecuteUpdateAsync(a => a
-                .SetProperty(a => a.Content, content), token);
+                .SetProperty(a => a.Content, content)
+                .SetProperty(a => a.DateUpdate, DateTime.UtcNow), token);
         }
 
         public async Task<List<Notes>> GetAllAsync(CancellationToken token)
