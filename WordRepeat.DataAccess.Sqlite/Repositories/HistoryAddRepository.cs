@@ -47,7 +47,6 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
         public async Task<int> UpdateCountAsync(int count, DateOnly date, CancellationToken token)
         {
             return await _context.HistoryAddTable
-                .AsNoTracking()
                 .Where(a => a.Date == date)
                 .ExecuteUpdateAsync(a => a
                 .SetProperty(a => a.CountAdd, a => a.CountAdd + count), token);
