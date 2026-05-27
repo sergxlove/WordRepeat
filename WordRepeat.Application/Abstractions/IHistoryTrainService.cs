@@ -17,5 +17,7 @@ namespace WordRepeat.Application.Abstractions
         Task<int> GetCountWrongAsync(CancellationToken token);
         Task<int> GetCountDoneAsync(CancellationToken token);
         Task<int> GetStreakAsync(CancellationToken token);
+        Task<HistoryTrain?> GetByDateAsync(DateOnly date, CancellationToken token);
+        Task<int> GetAccuracyByDayAsync(DateOnly date, CancellationToken token);
     }
 }

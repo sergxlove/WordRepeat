@@ -10,5 +10,6 @@ namespace WordRepeat.DataAccess.Sqlite.Abstractions
         Task<int> UpdateCountAsync(int count, DateOnly date, CancellationToken token);
         Task<HistoryAdd?> GetByIdAsync(Guid id, CancellationToken token);
         Task<int> GetAddedTodayAsync(CancellationToken token);
+        Task<HistoryAdd?> GetByDateAsync(DateOnly date, CancellationToken token);
     }
 }

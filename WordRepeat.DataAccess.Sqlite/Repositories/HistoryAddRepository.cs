@@ -35,6 +35,16 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
             return result;
         }
 
+        public async Task<HistoryAdd?> GetByDateAsync(DateOnly date, CancellationToken token)
+        {
+            HistoryAddEntity? resultEntity = await _context.HistoryAddTable
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.Date == date, token);
+            if(resultEntity is null) return null;
+            HistoryAdd result = MapperEntity.FromHistoryAddEntity(resultEntity);
+            return result;
+        }
+
         public async Task<bool> CheckByDateAsync(DateOnly date, CancellationToken token)
         {
             HistoryAddEntity? resultEntity = await _context.HistoryAddTable

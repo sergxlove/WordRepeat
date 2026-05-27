@@ -65,5 +65,13 @@ namespace WordRepeat.Application.Services
         {
             return await _repository.GetStreakAsync(token);
         }
+        public async Task<HistoryTrain?> GetByDateAsync(DateOnly date, CancellationToken token)
+        {
+            return await _repository.GetByDateAsync(date, token);
+        }
+        public async Task<int> GetAccuracyByDayAsync(DateOnly date, CancellationToken token)
+        {
+            return await _repository.GetAccuracyByDayAsync(date, token);
+        }
     }
 }
