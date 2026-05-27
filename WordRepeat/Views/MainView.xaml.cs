@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using WordRepeat.Abstractions;
 using WordRepeat.Application.Abstractions;
+using WordRepeat.Core.Models;
 using WordRepeat.Models;
 
 namespace WordRepeat.Views
@@ -36,8 +37,9 @@ namespace WordRepeat.Views
             TotalSessionsText.Text = $"Всего тренировок: {await trainService.CountAsync(token)}";
             Achievement2Description.Text = $"Повторили {await trainService.GetTrainedTodayAsync(token)} слов";
             Achievement1Description.Text = $"Занимались {await trainService.GetStreakAsync(token)} дней подряд";
+            MotivationPanel.Text = Motivations.GetMotivation();
         }
-
+        
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             try
@@ -49,6 +51,18 @@ namespace WordRepeat.Views
                 INotificationService notification = _serviceProvider
                     .GetRequiredService<INotificationService>();
                 notification.ShowError("Произошла ошибка");
+            }
+        }
+
+        private Task<List<DailyActivityModel>> GetWeeklyActivityAsync(CancellationToken token)
+        {
+            List<DailyActivityModel> result = new();
+            DateTime today = DateTime.Today;
+            for (int i = 0; i < 7; i++)
+            {
+                var date = today.AddDays(-i);
+                var dayStart = date.Date;
+                var dayEnd = date.Date.AddDays(1);
             }
         }
     }
