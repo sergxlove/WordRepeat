@@ -38,6 +38,8 @@ namespace WordRepeat.Views
             Achievement2Description.Text = $"Повторили {await trainService.GetTrainedTodayAsync(token)} слов";
             Achievement1Description.Text = $"Занимались {await trainService.GetStreakAsync(token)} дней подряд";
             MotivationPanel.Text = Motivations.GetMotivation();
+            var weeklyActivity = await GetWeeklyActivityAsync(token);
+            DailyStatsDataGrid.ItemsSource = weeklyActivity;
         }
         
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
@@ -54,16 +56,52 @@ namespace WordRepeat.Views
             }
         }
 
-        private Task<List<DailyActivityModel>> GetWeeklyActivityAsync(CancellationToken token)
+        private async Task<List<DailyActivityModel>> GetWeeklyActivityAsync(CancellationToken token)
         {
             List<DailyActivityModel> result = new();
-            DateTime today = DateTime.Today;
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            IHistoryTrainService historyTrainService = _serviceProvider
+                .GetRequiredService<IHistoryTrainService>();
+            IHistoryAddServices historyAddService = _serviceProvider 
+                .GetRequiredService<IHistoryAddServices>();
             for (int i = 0; i < 7; i++)
             {
                 var date = today.AddDays(-i);
-                var dayStart = date.Date;
-                var dayEnd = date.Date.AddDays(1);
+                HistoryTrain? trainDay = await historyTrainService.GetByDateAsync(date, token);
+                HistoryAdd? addDay = await historyAddService.GetByDateAsync(date, token);
+                int accuracyDay = await historyTrainService.GetAccuracyByDayAsync(date, token);
+                string dayName;
+                if (i == 0)
+                    dayName = "Сегодня";
+                else if (i == 1)
+                    dayName = "Вчера";
+                else
+                    dayName = date.ToString("dddd", new System.Globalization.CultureInfo("ru-RU"));
+                int trainDayCount;
+                int addDayCount;
+                if (trainDay is null) trainDayCount = 0;
+                else trainDayCount = trainDay.Total;
+                if (addDay is null) addDayCount = 0;
+                else addDayCount = addDay.CountAdd;
+                result.Add(new DailyActivityModel
+                {
+                    Day = dayName,
+                    AddedWords = addDayCount,
+                    RepeatedWords = trainDayCount,
+                    Accuracy = accuracyDay,
+                    AccuracyColor = GetAccuracyColor(accuracyDay)
+                });
             }
+            return result;
+        }
+
+        private System.Windows.Media.Brush GetAccuracyColor(double accuracy)
+        {
+            if (accuracy >= 80)
+                return System.Windows.Media.Brushes.LightGreen;
+            if (accuracy >= 60)
+                return System.Windows.Media.Brushes.Gold;
+            return System.Windows.Media.Brushes.OrangeRed;
         }
     }
 }

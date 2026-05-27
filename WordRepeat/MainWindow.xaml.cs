@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using WordRepeat.Abstractions;
 using WordRepeat.Application.Abstractions;
 using WordRepeat.Application.Services;
@@ -32,16 +35,20 @@ namespace WordRepeat
         private AppData _appData;
         public Action<VariableView> ChangeViewAction { get; private set; }
 
+        private bool _isClosing = false;
+
         public MainWindow()
         {
             InitializeComponent();
+
             ChangeViewAction = (view) =>
             {
                 _currentView = view;
                 ShowViews();
             };
+
             _serviceCollection = new ServiceCollection();
-            _serviceCollection.AddDbContext<WordRepeatDbContext>(opt => 
+            _serviceCollection.AddDbContext<WordRepeatDbContext>(opt =>
                 opt.UseSqlite("Data Source=D:\\projects\\projects\\WordRepeat\\WordRepeat\\data.db"));
             _serviceCollection.AddScoped<IHistoryAddRepository, HistoryAddRepository>();
             _serviceCollection.AddScoped<IHistoryTrainRepository, HistoryTrainRepository>();
@@ -50,7 +57,7 @@ namespace WordRepeat
             _serviceCollection.AddScoped<IWordsPairRepository, WordsPairRepository>();
             _serviceCollection.AddScoped<IHistoryAddServices, HistoryAddServices>();
             _serviceCollection.AddScoped<IHistoryTrainService, HistoryTrainService>();
-            _serviceCollection.AddScoped<IHistoryTypesService,  HistoryTypesService>();
+            _serviceCollection.AddScoped<IHistoryTypesService, HistoryTypesService>();
             _serviceCollection.AddScoped<INotesService, NotesService>();
             _serviceCollection.AddScoped<IWordPairService, WordPairService>();
             _serviceCollection.AddScoped<INotificationService>(pr =>
@@ -65,9 +72,149 @@ namespace WordRepeat
             _trainActionView = new TrainActionView(_serviceProvider, _appData);
             _trainResultView = new TrainResultView(_serviceProvider, _appData);
             _notesView = new NotesView(_serviceProvider, _appData);
+
             CreateAppData();
             ShowViews();
             SizeChanged += MainWindow_SizeChanged;
+            StateChanged += MainWindow_StateChanged!;
+
+            SetupWindowButtons();
+
+            this.Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            PlayOpenAnimation();
+        }
+
+        private void PlayOpenAnimation()
+        {
+            if (MainBorder != null)
+            {
+                MainBorder.Opacity = 0;
+
+                var fadeAnimation = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(300))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                };
+
+                MainBorder.BeginAnimation(OpacityProperty, fadeAnimation);
+
+                var scaleTransform = new ScaleTransform(0.98, 0.98);
+                MainBorder.RenderTransform = scaleTransform;
+                MainBorder.RenderTransformOrigin = new Point(0.5, 0.5);
+
+                var scaleXAnimation = new DoubleAnimation(0.98, 1, TimeSpan.FromMilliseconds(300))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                };
+
+                var scaleYAnimation = new DoubleAnimation(0.98, 1, TimeSpan.FromMilliseconds(300))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                };
+
+                scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleXAnimation);
+                scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleYAnimation);
+            }
+        }
+
+        private void PlayCloseAnimation()
+        {
+            if (_isClosing) return;
+            _isClosing = true;
+
+            if (MainBorder != null)
+            {
+                var fadeAnimation = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(200))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+                };
+
+                var scaleTransform = MainBorder.RenderTransform as ScaleTransform;
+                if (scaleTransform != null)
+                {
+                    var scaleXAnimation = new DoubleAnimation(1, 0.98, TimeSpan.FromMilliseconds(200))
+                    {
+                        EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+                    };
+
+                    var scaleYAnimation = new DoubleAnimation(1, 0.98, TimeSpan.FromMilliseconds(200))
+                    {
+                        EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+                    };
+
+                    scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleXAnimation);
+                    scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleYAnimation);
+                }
+
+                fadeAnimation.Completed += (s, e) =>
+                {
+                    System.Windows.Application.Current.Shutdown();
+                };
+
+                MainBorder.BeginAnimation(OpacityProperty, fadeAnimation);
+            }
+            else
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
+        }
+
+        private async void AnimateWindowStateChange()
+        {
+            if (MainBorder != null)
+            {
+                var animation = new DoubleAnimation(0.7, 1, TimeSpan.FromMilliseconds(200))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                };
+
+                MainBorder.Opacity = 0.7;
+                MainBorder.BeginAnimation(OpacityProperty, animation);
+
+                await Task.Delay(200);
+                MainBorder.Opacity = 1;
+            }
+        }
+
+        private void SetupWindowButtons()
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                MaximizeButton.Content = "\uE923";
+                if (MainBorder != null)
+                {
+                    MainBorder.CornerRadius = new CornerRadius(0);
+                }
+            }
+            else
+            {
+                MaximizeButton.Content = "\uE922"; 
+            }
+        }
+
+        private void MainWindow_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                MaximizeButton.Content = "\uE923"; 
+                if (MainBorder != null)
+                {
+                    MainBorder.CornerRadius = new CornerRadius(0);
+                }
+            }
+            else if (WindowState == WindowState.Normal)
+            {
+                MaximizeButton.Content = "\uE922"; 
+                if (MainBorder != null)
+                {
+                    MainBorder.CornerRadius = new CornerRadius(10);
+                }
+            }
+
+            AnimateWindowStateChange();
         }
 
         public async void CreateAppData()
@@ -155,7 +302,7 @@ namespace WordRepeat
 
         private void ShowViews()
         {
-            switch(_currentView)
+            switch (_currentView)
             {
                 case VariableView.Main:
                     MainContentControl.Content = _mainView;
@@ -184,6 +331,16 @@ namespace WordRepeat
                 default:
                     break;
             }
+
+            if (MainContentControl.Content is FrameworkElement content)
+            {
+                content.Opacity = 0;
+                var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                };
+                content.BeginAnimation(OpacityProperty, fadeIn);
+            }
         }
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -194,6 +351,63 @@ namespace WordRepeat
                 content.Height = MainContentControl.ActualHeight;
             }
         }
-    }
 
+        private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                ToggleMaximize();
+            }
+            else if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
+        }
+
+        private async void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (MainBorder != null)
+            {
+                var animation = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(150))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+                };
+
+                animation.Completed += (s, _) =>
+                {
+                    this.WindowState = WindowState.Minimized;
+                    MainBorder.Opacity = 1;
+                };
+
+                MainBorder.BeginAnimation(OpacityProperty, animation);
+                await Task.Delay(150);
+            }
+            else
+            {
+                this.WindowState = WindowState.Minimized;
+            }
+        }
+
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMaximize();
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            PlayCloseAnimation();
+        }
+
+        private void ToggleMaximize()
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+        }
+    }
 }

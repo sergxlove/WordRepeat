@@ -36,5 +36,10 @@ namespace WordRepeat.Application.Services
         {
             return await _repository.GetAddedTodayAsync(token);
         }
+
+        public async Task<HistoryAdd?> GetByDateAsync(DateOnly date, CancellationToken token)
+        {
+            return await _repository.GetByDateAsync(date, token);
+        }
     }
 }

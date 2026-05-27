@@ -35,6 +35,16 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
             return result;
         }
 
+        public async Task<HistoryTrain?> GetByDateAsync(DateOnly date, CancellationToken token)
+        {
+            HistoryTrainEntity? resultEntity = await _context.HistoryTrainTable
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.Date == date, token);
+            if (resultEntity is null) return null; 
+            HistoryTrain result = MapperEntity.FromHistoryTrainEntity(resultEntity);
+            return result;
+        }
+
         public async Task<bool> CheckByDateAsync(DateOnly date, CancellationToken token)
         {
             HistoryTrainEntity? result = await _context.HistoryTrainTable
@@ -72,6 +82,21 @@ namespace WordRepeat.DataAccess.Sqlite.Repositories
                 .Where(a => a.Date == dateToday)
                 .SumAsync(a => a.Total, token);
             return result;
+        }
+
+        public async Task<int> GetAccuracyByDayAsync(DateOnly date, CancellationToken token)
+        {
+            int result = await _context.HistoryTrainTable
+                .AsNoTracking()
+                .Where (a => a.Date == date)
+                .SumAsync (a => a.Result, token);
+            int total = await _context.HistoryTrainTable
+                .AsNoTracking()
+                .Where(a => a.Date == date)
+                .SumAsync(a => a.Total, token);
+            if (total == 0) return 0;
+            double accuracy = result / total * 100;
+            return Convert.ToInt32(accuracy);
         }
 
         public async Task<int> GetAccuracyByWeekAsync(CancellationToken token)
