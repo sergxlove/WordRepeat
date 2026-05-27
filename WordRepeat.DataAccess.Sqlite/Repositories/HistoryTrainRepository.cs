@@ -3,7 +3,6 @@ using WordRepeat.Core.Models;
 using WordRepeat.DataAccess.Sqlite.Abstractions;
 using WordRepeat.DataAccess.Sqlite.Infrastructures;
 using WordRepeat.DataAccess.Sqlite.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WordRepeat.DataAccess.Sqlite.Repositories
 {
