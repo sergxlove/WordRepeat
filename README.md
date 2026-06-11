@@ -7,6 +7,15 @@
 ![Static Badge](https://img.shields.io/badge/developer-sergxlove-green)
 ![Static Badge](https://img.shields.io/badge/year-2026-green)
 
+## Stack
+
+![Static Badge](https://img.shields.io/badge/language-C%23-red)
+![Static Badge](https://img.shields.io/badge/framework-WPF-blue)
+![Static Badge](https://img.shields.io/badge/framework-Entity_Framework-blue)
+![Static Badge](https://img.shields.io/badge/framework-Serilog-blue)
+![Static Badge](https://img.shields.io/badge/framework-NUnit-blue)
+![Static Badge](https://img.shields.io/badge/services-SQLite-orange)
+
 ## About 
 
 The program for repeating English words on WPF is a smart simulator based on the scientific method of interval repetition. The app offers several training modes: flashcards, compliance tests, listening, and written input, automatically adapting the difficulty and repetition schedule based on user responses. The algorithm analyzes which words are more difficult to come up with and plans to show them more often to ensure reliable memorization.
